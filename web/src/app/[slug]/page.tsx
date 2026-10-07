@@ -71,7 +71,8 @@ export default async function Article({ params }: PageProps<"/[slug]">) {
           width={600}
           height={400}
           sizes="(min-width: 640px) 600px, 100vw"
-          priority
+          preload
+          loading="eager"
           className="mb-6 h-auto w-full max-w-[600px]"
         />
       )}

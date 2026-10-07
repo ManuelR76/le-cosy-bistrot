@@ -17,7 +17,8 @@ export function Media({ src, alt, sizes, priority, className }: Props) {
       alt={alt}
       fill
       sizes={sizes}
-      priority={priority}
+      preload={priority}
+      loading={priority ? "eager" : undefined}
       className={`object-cover ${className ?? ""}`}
     />
   );

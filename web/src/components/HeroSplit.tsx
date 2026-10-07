@@ -40,7 +40,7 @@ export function HeroSplit({ titre, sousTitre, paragraphes, cta, fond, haut, bas 
       </div>
       <div className="hidden grid-rows-2 gap-5 tab:grid">
         <div className="relative min-h-[328px]">
-          <Diaporama images={haut} sizes="50vw" />
+          <Diaporama images={haut} sizes="50vw" priority />
         </div>
         <div className="relative min-h-[328px]">
           <Diaporama images={bas} sizes="50vw" />
