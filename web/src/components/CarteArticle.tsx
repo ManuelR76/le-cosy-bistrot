@@ -13,7 +13,7 @@ export function CarteArticle({ article, titreNiveau = 3 }: { article: Article; t
         <BordDechire couleur="noir" bas={false} />
       </div>
       <div className="relative flex flex-1 flex-col gap-4 bg-rouge p-5 pb-10">
-        <T className="titre-2">
+        <T className="titre-2 uppercase">
           <Link href={href} className="hover:text-beige">
             {article.h1}
           </Link>

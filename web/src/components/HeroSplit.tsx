@@ -7,22 +7,30 @@ type Props = {
   sousTitre: string;
   paragraphes: string[];
   cta?: Cta;
-  /** Accueil : diaporama + voile derrière le texte. Pages offre : fond uni. */
+  /** Accueil : diaporama + voile derrière un bloc de texte de 400 px centré. Pages offre : fond uni, texte 600 px. */
   fond?: Image[];
   haut: Image[];
   bas: Image[];
 };
 
-/** Hero en deux colonnes : texte à gauche, deux diaporamas empilés à droite (masqués en mobile). */
+/**
+ * Hero en deux colonnes, hauteur 75vh (min. 675 px desktop) comme l'existant.
+ * Accueil : colonnes 50 % / reste, gouttière 20. Pages offre : retrait gauche 64, colonne droite 45,5 %.
+ */
 export function HeroSplit({ titre, sousTitre, paragraphes, cta, fond, haut, bas }: Props) {
+  const accueil = Boolean(fond);
   return (
-    <section className="grid min-h-[609px] tab:min-h-[675px] tab:grid-cols-2 tab:gap-5">
-      <div className="relative flex items-center px-6 py-16 tab:px-5 desk:pl-[88px]">
+    <section
+      className={`grid min-h-[609px] tab:min-h-[max(675px,75vh)] tab:gap-5 ${
+        accueil ? "tab:grid-cols-[50%_1fr]" : "tab:grid-cols-[1fr_45.5vw] desk:pl-16"
+      }`}
+    >
+      <div className={`relative flex items-center px-6 py-16 ${accueil ? "tab:justify-center tab:px-5" : "tab:px-6"}`}>
         {fond && <Diaporama images={fond} sizes="(min-width: 768px) 50vw, 100vw" priority voile />}
-        <div className="relative z-[1] max-w-[600px]">
+        <div className={`relative z-[1] ${accueil ? "tab:w-[400px]" : "max-w-[600px]"}`}>
           <h1 className="titre-1">{titre}</h1>
           <p className="titre-2 mt-[10px]">{sousTitre}</p>
-          <div className="mt-5 flex flex-col gap-[14.4px] text-justify tab:text-left">
+          <div className="mt-5 flex flex-col gap-[14.4px] text-justify">
             {paragraphes.map((p) => (
               <p key={p}>{p}</p>
             ))}

@@ -7,7 +7,7 @@ Cible : Next.js (App Router) + TypeScript + Tailwind, WordPress headless (métho
 |---|-------|----------|------|
 | 1 | Maquette | Identique à l'existant (pas de Figma) | 2026-10-07 |
 | 2 | CMS | WP actuel en headless (WPGraphQL + ACF à installer, avec accord avant toute modif du WP) | 2026-10-07 |
-| 3 | Police « Congratulations DEMO » | Remplacée par un équivalent libre auto-hébergé (proposition à valider) | 2026-10-07 |
+| 3 | Police « Congratulations DEMO » | ~~Équivalent libre~~ → police d'origine conservée (voir 12) | 2026-10-07 |
 | 4 | Catégories (4) + tag `/tag/bourg-achard/` | 301 vers `/articles/` | 2026-10-07 |
 | 5 | Analytics | Même GTM/GA4 conservé | 2026-10-07 |
 | 6 | Tracker `track.helloweb-agence.fr` | Non retenu — à confirmer | 2026-10-07 |
@@ -21,8 +21,8 @@ Cible : Next.js (App Router) + TypeScript + Tailwind, WordPress headless (métho
 
 | # | Sujet | Statut | Détail |
 |---|-------|--------|--------|
-| 12 | Police « Gimoc Botuned » (h1, logo) | **À trancher client** | Police commerciale Warisand Studio (« All Rights Reserved »). Fichier non repris tant que la licence web n'est pas prouvée ; repli Mouse Memoirs/Georgia en attendant. Si licence OK : convertir le TTF en woff2 → `public/fonts/Gimoc-Botuned.woff2`. |
-| 13 | Équivalent libre « Congratulations DEMO » | **À valider** | Mouse Memoirs (OFL) intégrée. Alternatives : Bebas Neue, Amatic SC (gras). |
+| 12 | Polices | **Décidé Helloweb (07/10)** : polices d'origine reprises | Gimoc Botuned (Warisand Studio, « All Rights Reserved ») et Congratulations DEMO (version démo) remises à l'identique, auto-hébergées. Risque de licence à lever avec le client (achat des licences web). |
+| 13 | Équivalent libre « Congratulations DEMO » | Annulé | Remplace la décision 3 : on garde la police d'origine. |
 | 14 | Prix incohérents | **À trancher client** | Accueil et /le-cosy-bistrot/ : formules 21,90 € / 23,90 € / 18,90 € ; 3 articles de 2024 disent 16,90 €. Repris tels quels. |
 | 15 | Mentions légales | **À trancher client** | Paragraphe sur « articles rédigés par des scientifiques / conseils médicaux » hors sujet (modèle copié). Politique de confidentialité : formulaire « Contactez-nous » inexistant. Repris tels quels. |
 | 16 | Double h1 | Corrigé | Pages offre et /le-cosy-bistrot/ avaient deux h1 ; le second devient un sous-titre (même style). |
@@ -34,3 +34,4 @@ Cible : Next.js (App Router) + TypeScript + Tailwind, WordPress headless (métho
 | 22 | Médias | Architecture | Restent dans la médiathèque WP (admin.). `/wp-content/uploads/*` → 301 vers admin. Favicon servi depuis WP en attendant copie locale. |
 | 23 | Redirections | Fait | 301 directes (catégories, tag, flux, plans de site AIOSEO, médias, wp-admin). Slash final : 308 natif Next (équivalent 301). `/?p=ID` : IDs à relever dans WP (Phase 5). |
 | 24 | Extraits | Info | 20 mots + « … », comme la grille Elementor. |
+| 25 | Alignements | Corrigé | Relevé au getBoundingClientRect à 1440 : contenu limité à 1440 px avec marges 64 (16 mobile), bandeau formules pleine largeur, hero accueil 50 % avec bloc texte 400 px centré, hero des pages offre 45,5vw à droite, hauteur 75vh, logo 48 px, horaires alignés en haut, pied 364 / 50 / 364 / reste. |

@@ -8,7 +8,7 @@ import { Logo } from "./Logo";
 export function Footer() {
   return (
     <footer className="mt-auto">
-      <div className="conteneur grid gap-10 py-16 tab:grid-cols-2 desk:grid-cols-[364px_364px_1fr] desk:gap-[50px] desk:py-[50px]">
+      <div className="conteneur grid gap-10 py-16 tab:grid-cols-2 desk:grid-cols-[364px_414px_1fr] desk:gap-0 desk:py-[50px] desk:[&>*:nth-child(2)]:pl-[50px]">
         <div className="flex flex-col gap-5">
           <Logo />
           <a href={site.mapsFooter} target="_blank" rel="noopener" className="flex items-center gap-3 hover:text-beige">

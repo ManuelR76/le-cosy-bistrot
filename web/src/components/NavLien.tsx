@@ -10,7 +10,7 @@ export function NavLien({ href, children, onClick }: { href: string; children: R
       href={href}
       onClick={onClick}
       aria-current={actif ? "page" : undefined}
-      className={`font-accent text-[22px] leading-[22px] uppercase transition-colors hover:text-beige ${actif ? "text-beige" : "text-blanc"}`}
+      className={`font-accent text-[22px] leading-[22px] font-semibold transition-colors hover:text-beige ${actif ? "text-beige" : "text-blanc"}`}
     >
       {children}
     </Link>

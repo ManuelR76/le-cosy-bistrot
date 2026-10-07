@@ -25,7 +25,7 @@ export default async function Accueil() {
       <HeroSplit titre={hero.titre} sousTitre={hero.sousTitre} paragraphes={hero.paragraphes} cta={hero.cta} fond={hero.fond} haut={hero.droiteHaut} bas={hero.droiteBas} />
 
       {/* Horaires */}
-      <section className="conteneur grid items-center gap-8 py-[50px] tab:grid-cols-2 tab:gap-[50px] desk:py-[100px]">
+      <section className="conteneur grid items-start gap-8 py-[50px] tab:grid-cols-2 tab:gap-[50px] desk:py-[100px]">
         <div>
           <h2 className="titre-2">{horaires.titre}</h2>
           <p className="mt-5">{horaires.texte}</p>
@@ -40,7 +40,7 @@ export default async function Accueil() {
 
       {/* Menus et formules */}
       <section className="bg-rouge">
-        <div className="conteneur grid gap-8 py-[50px] desk:grid-cols-[1fr_383px] desk:gap-[50px] desk:py-[100px]">
+        <div className="conteneur-large grid grid-cols-[minmax(0,1fr)] gap-8 py-[50px] desk:grid-cols-[1fr_383px] desk:gap-[50px] desk:py-[100px]">
           <div>
             <h2 className="titre-2">{menus.titre}</h2>
             <div className="mt-5 flex flex-col gap-[14.4px]">
@@ -52,12 +52,12 @@ export default async function Accueil() {
           </div>
           <ul className="flex flex-col gap-5">
             {site.formules.map((f) => (
-              <li key={f.titre} className="relative flex items-center justify-between gap-4 bg-noir px-5 py-8">
-                <div>
+              <li key={f.titre} className="relative flex items-center justify-between gap-[10px] bg-noir p-5">
+                <div className="w-[250px] max-w-[70%]">
                   <h3 className="titre-2 text-beige">{f.titre}</h3>
-                  <p className="mt-2 font-accent text-[20px] leading-none uppercase">{f.detail}</p>
+                  <p className="mt-2 font-accent text-[16px] leading-none font-semibold">{f.detail}</p>
                 </div>
-                <p className="shrink-0">{f.prix}</p>
+                <p className="w-[83px] shrink-0 text-right">{f.prix}</p>
                 <BordDechire couleur="rouge" hauteur={15} />
               </li>
             ))}
