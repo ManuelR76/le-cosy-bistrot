@@ -304,7 +304,10 @@ function Assistant({ onAppliquer }: { onAppliquer: (p: { chemin: string; valeur:
   const [saisie, setSaisie] = useState("");
   const [attente, setAttente] = useState(false);
   const bas = useRef<HTMLDivElement>(null);
-  useEffect(() => bas.current?.scrollIntoView({ block: "end" }), [fil]);
+  useEffect(() => {
+    // Corps en bloc : scrollIntoView renvoie une promesse dans les Chromium récents, à ne pas retourner à React.
+    bas.current?.scrollIntoView({ block: "end" });
+  }, [fil]);
 
   const envoyer = async () => {
     const texte = saisie.trim();
