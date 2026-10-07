@@ -18,8 +18,6 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       { protocol: "https", hostname: media.hostname, pathname: "/wp-content/uploads/**" },
-      // Photos envoyées depuis le mode édition (Vercel Blob)
-      { protocol: "https", hostname: "*.public.blob.vercel-storage.com", pathname: "/photos/**" },
     ],
     localPatterns: [{ pathname: "/medias/**" }, { pathname: "/fonts/**" }],
   },
