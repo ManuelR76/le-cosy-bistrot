@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prebuild": "node scripts/polices.mjs"
+    "prebuild": "node scripts/polices.mjs",
+    "build:hostinger": "next build && node scripts/standalone.mjs",
+    "start:hostinger": "node .next/standalone/server.js"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.1",
