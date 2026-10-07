@@ -100,7 +100,7 @@ export function Editeur() {
       el.closest("a")?.addEventListener("click", bloquerLien);
     }
     const seoEl = document.querySelector<HTMLElement>("[data-seo]");
-    const raf = requestAnimationFrame(() => {
+    const raf = window.setTimeout(() => {
       setGroupes(
         Array.from(document.querySelectorAll<HTMLElement>("[data-edit-photos]")).map((el) => ({
           chemin: el.dataset.editPhotos!,
@@ -116,7 +116,7 @@ export function Editeur() {
     };
     window.addEventListener("beforeunload", quitter);
     return () => {
-      cancelAnimationFrame(raf);
+      window.clearTimeout(raf);
       window.removeEventListener("beforeunload", quitter);
       for (const el of els) {
         el.removeEventListener("input", onInput);
@@ -590,10 +590,10 @@ function BoutonPhotos({ groupe, onOuvrir }: { groupe: Groupe; onOuvrir: () => vo
       const r = groupe.el.getBoundingClientRect();
       setPos({ top: r.top + window.scrollY + 12, left: r.left + window.scrollX + 12 });
     };
-    const raf = requestAnimationFrame(maj);
+    const raf = window.setTimeout(maj, 0);
     window.addEventListener("resize", maj);
     return () => {
-      cancelAnimationFrame(raf);
+      window.clearTimeout(raf);
       window.removeEventListener("resize", maj);
     };
   }, [groupe.el]);

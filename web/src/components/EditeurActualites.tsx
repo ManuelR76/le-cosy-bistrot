@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { mediaUrl } from "@/lib/media";
 
 type Actu = { id: string; slug: string; titre: string; texte: string; date: string; image: { src: string; alt: string } | null };
@@ -275,11 +275,11 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
 
 /** Bouton visible seulement en mode édition, posé dans la page (accueil, liste des articles). */
 export function BoutonAjoutActualite() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => setVisible(document.cookie.split("; ").includes("cosy-edition=1")));
-    return () => cancelAnimationFrame(raf);
-  }, []);
+  const visible = useSyncExternalStore(
+    () => () => {},
+    () => document.cookie.split("; ").includes("cosy-edition=1"),
+    () => false,
+  );
   if (!visible) return null;
   return (
     <button type="button" className="btn mb-8 text-[20px]" onClick={() => window.dispatchEvent(new CustomEvent(EVT_NOUVELLE_ACTU))}>
