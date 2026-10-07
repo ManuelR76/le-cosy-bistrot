@@ -6,7 +6,7 @@ import fs from "node:fs";
 
 const base = (process.argv[2] || "http://localhost:3000").replace(/\/$/, "");
 const csv = process.argv[3] || new URL("../../contexte-projet/inventaire/urls.csv", import.meta.url).pathname;
-const extra = ["/feed/", "/sitemap_index.xml", "/wp-sitemap.xml", "/post-sitemap.xml", "/page-sitemap.xml", "/sitemap.rss", "/category/bristot/", "/le-cosy-bistrot"];
+const extra = ["/feed/", "/sitemap_index.xml", "/wp-sitemap.xml", "/post-sitemap.xml", "/page-sitemap.xml", "/sitemap.rss", "/category/bristot/", "/le-cosy-bistrot", "/?p=803", "/?p=757", "/?page_id=19", "/?page_id=7", "/?p=10"];
 const paths = [...fs.readFileSync(csv, "utf8").trim().split("\n").slice(1).map((l) => l.split(",")[0]), ...extra];
 
 let ko = 0;
