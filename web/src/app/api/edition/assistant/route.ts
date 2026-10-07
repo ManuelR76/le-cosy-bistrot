@@ -72,7 +72,7 @@ export async function POST(req: Request) {
       max_tokens: 2000,
       system: SYSTEME,
       tools: [OUTIL],
-      tool_choice: { type: "tool", name: OUTIL.name },
+      tool_choice: { type: "auto" },
       messages,
     }),
     signal: AbortSignal.timeout(45000),
@@ -83,8 +83,12 @@ export async function POST(req: Request) {
   if (res && !res.ok) console.error("[assistant] API", res.status, (await res.text()).slice(0, 500));
   if (!res?.ok) return NextResponse.json({ erreur: "L'assistant ne répond pas pour le moment. Réessayez dans un instant." }, { status: 502 });
 
-  const data = (await res.json()) as { content?: { type: string; input?: { message?: string; modifications?: { chemin: string; valeur: string }[] } }[] };
-  const sortie = data.content?.find((c) => c.type === "tool_use")?.input;
+  const data = (await res.json()) as {
+    content?: { type: string; text?: string; input?: { message?: string; modifications?: { chemin: string; valeur: string }[] } }[];
+  };
+  // tool_choice forcé non accepté par certains modèles : on laisse le modèle choisir et on retombe sur son texte.
+  const texte = data.content?.filter((c) => c.type === "text" && c.text).map((c) => c.text).join("\n").trim();
+  const sortie = data.content?.find((c) => c.type === "tool_use")?.input ?? (texte ? { message: texte, modifications: [] } : undefined);
   const autorises = new Set(champs.map((c) => c.chemin));
   const modifications = (sortie?.modifications ?? [])
     .filter((m) => autorises.has(m.chemin) && typeof m.valeur === "string" && m.valeur.length <= 5000)
