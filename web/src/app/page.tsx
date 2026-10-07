@@ -4,8 +4,8 @@ import { CarteArticle } from "@/components/CarteArticle";
 import { Diaporama } from "@/components/Diaporama";
 import { HeroSplit } from "@/components/HeroSplit";
 import { Horaires } from "@/components/Horaires";
+import { SeoEdition } from "@/components/SeoEdition";
 import { JsonLd } from "@/components/JsonLd";
-import { accueil as accueilDefaut } from "@/content/pages";
 import { getArticles } from "@/lib/content";
 import { ed } from "@/lib/edition/attrs";
 import { getContenu } from "@/lib/edition/contenu";
@@ -13,7 +13,10 @@ import { graphe, meta } from "@/lib/seo";
 
 export const revalidate = 60;
 
-export const metadata = meta({ title: accueilDefaut.meta.title, description: accueilDefaut.meta.description, path: "/" });
+export async function generateMetadata() {
+  const m = (await getContenu()).accueil.meta;
+  return meta({ ...m, path: "/" });
+}
 
 export default async function Accueil() {
   const [articles, { accueil, site }] = await Promise.all([getArticles().then((a) => a.slice(0, 3)), getContenu()]);
@@ -21,6 +24,7 @@ export default async function Accueil() {
 
   return (
     <>
+      <SeoEdition chemin="accueil.meta" title={accueil.meta.title} description={accueil.meta.description} />
       <JsonLd data={graphe({ path: "/", title: accueil.meta.title, description: accueil.meta.description, crumbs: [{ name: "Accueil", path: "/" }] })} />
 
       <HeroSplit

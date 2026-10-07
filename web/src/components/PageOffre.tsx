@@ -3,6 +3,7 @@ import { graphe } from "@/lib/seo";
 import { Carrousel } from "./Carrousel";
 import { HeroSplit } from "./HeroSplit";
 import { JsonLd } from "./JsonLd";
+import { SeoEdition } from "./SeoEdition";
 import { SectionTexteDiaporama } from "./SectionTexteDiaporama";
 
 export function PageOffre({ data, cle, path, crumb }: { data: Data; cle: "privatisation" | "evenement"; path: string; crumb: string }) {
@@ -19,6 +20,7 @@ export function PageOffre({ data, cle, path, crumb }: { data: Data; cle: "privat
           ],
         })}
       />
+      <SeoEdition chemin={`${cle}.meta`} title={data.meta.title} description={data.meta.description} />
       <HeroSplit chemin={`${cle}.hero`} {...data.hero} />
       {data.sections.map((s, i) => (
         <SectionTexteDiaporama key={i} section={s} chemin={`${cle}.sections.${i}`} />

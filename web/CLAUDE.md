@@ -26,7 +26,9 @@ npm run dev · npm run build · node scripts/check-redirects.mjs http://localhos
 - [x] Phase 2 — Architecture (ARCHITECTURE.md)
 - [x] Phase 3 — Intégration de tous les gabarits sur repli statique ; articles et pages légales branchés WPGraphQL
 - [x] Édition sur la page (/connexion/) : textes et photos des pages, horaires, formules, coordonnées (décision 26)
-- [ ] Stockage Blob à créer sur Vercel (BLOB_READ_WRITE_TOKEN) — sinon 503 à l'enregistrement
+- [x] Stockage Blob privé `le-cosy-bistrot-blob` connecté (BLOB_STORE_ID + OIDC)
+- [x] Panneau d'édition : assistant, modifs, Google, historique, aide (décision 27)
+- [ ] Clé ANTHROPIC_API_KEY à ajouter sur Vercel pour activer l'assistant
 - [ ] Édition des articles et pages légales
 - [x] Phase 5 (partiel) — 301, sitemap, robots, script de contrôle (33/33)
 - [ ] Phase 4 — GA4 réel en préprod, formulaires : aucun

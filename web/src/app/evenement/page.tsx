@@ -1,10 +1,12 @@
 import { PageOffre } from "@/components/PageOffre";
-import { evenement } from "@/content/pages";
 import { getContenu } from "@/lib/edition/contenu";
 import { meta } from "@/lib/seo";
 
 export const revalidate = 60;
-export const metadata = meta({ ...evenement.meta, path: "/evenement/" });
+export async function generateMetadata() {
+  const m = (await getContenu()).evenement.meta;
+  return meta({ ...m, path: "/evenement/" });
+}
 
 export default async function Page() {
   const c = await getContenu();

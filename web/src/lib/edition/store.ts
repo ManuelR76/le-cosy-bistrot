@@ -59,6 +59,40 @@ export async function ecrireEdits(edits: Edits): Promise<void> {
   await fs.writeFile(path.join(DIR, FICHIER), json);
 }
 
+export type Version = { id: string; date: string };
+
+/** Versions précédentes (les plus récentes d'abord). */
+export async function listerVersions(): Promise<Version[]> {
+  const ids: string[] = [];
+  if (BLOB) {
+    const { list } = await import("@vercel/blob");
+    const res = await list({ prefix: "historique/", limit: 1000 }).catch(() => null);
+    for (const b of res?.blobs ?? []) ids.push(b.pathname.replace(/^historique\//, "").replace(/\.json$/, ""));
+  } else {
+    const fichiers = await fs.readdir(DIR).catch(() => [] as string[]);
+    for (const f of fichiers) if (/^contenu-\d+\.json$/.test(f)) ids.push(f.replace(/\.json$/, ""));
+  }
+  return ids
+    .map((id) => ({ id, ts: Number(id.split("-")[1]) }))
+    .filter((v) => Number.isFinite(v.ts))
+    .sort((a, b) => b.ts - a.ts)
+    .slice(0, 50)
+    .map((v) => ({ id: v.id, date: new Date(v.ts).toISOString() }));
+}
+
+export async function lireVersion(id: string): Promise<Edits | null> {
+  if (!/^contenu-\d+$/.test(id)) return null;
+  try {
+    if (BLOB) {
+      const f = await lireBlob(`historique/${id}.json`);
+      return f ? (JSON.parse(f.data.toString("utf8")) as Edits) : null;
+    }
+    return JSON.parse(await fs.readFile(path.join(DIR, `${id}.json`), "utf8")) as Edits;
+  } catch {
+    return null;
+  }
+}
+
 export async function enregistrerPhoto(nom: string, data: ArrayBuffer, type: string): Promise<string> {
   const propre = `${Date.now()}-${nom.toLowerCase().replace(/[^a-z0-9.]+/g, "-").replace(/^-+|-+$/g, "")}`;
   if (BLOB) {

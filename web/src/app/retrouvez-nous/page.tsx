@@ -1,19 +1,23 @@
 import { CarteGoogle } from "@/components/CarteGoogle";
 import { Horaires } from "@/components/Horaires";
 import { IconeLieu, IconeTel } from "@/components/Icones";
+import { SeoEdition } from "@/components/SeoEdition";
 import { JsonLd } from "@/components/JsonLd";
-import { retrouvezNous as defaut } from "@/content/pages";
 import { ed } from "@/lib/edition/attrs";
 import { getContenu } from "@/lib/edition/contenu";
 import { graphe, meta } from "@/lib/seo";
 
 export const revalidate = 60;
-export const metadata = meta({ ...defaut.meta, path: "/retrouvez-nous/" });
+export async function generateMetadata() {
+  const m = (await getContenu()).retrouvezNous.meta;
+  return meta({ ...m, path: "/retrouvez-nous/" });
+}
 
 export default async function Page() {
   const { retrouvezNous: d, site } = await getContenu();
   return (
     <>
+      <SeoEdition chemin="retrouvezNous.meta" title={d.meta.title} description={d.meta.description} />
       <JsonLd
         data={graphe({
           path: "/retrouvez-nous/",

@@ -1,13 +1,17 @@
 import { Carrousel } from "@/components/Carrousel";
+import { SeoEdition } from "@/components/SeoEdition";
 import { JsonLd } from "@/components/JsonLd";
 import { Media } from "@/components/Media";
-import { leCosyBistrot as defaut, type Bloc } from "@/content/pages";
+import { type Bloc } from "@/content/pages";
 import { ed, edPhotos } from "@/lib/edition/attrs";
 import { getContenu } from "@/lib/edition/contenu";
 import { graphe, meta } from "@/lib/seo";
 
 export const revalidate = 60;
-export const metadata = meta({ ...defaut.meta, path: "/le-cosy-bistrot/" });
+export async function generateMetadata() {
+  const m = (await getContenu()).leCosyBistrot.meta;
+  return meta({ ...m, path: "/le-cosy-bistrot/" });
+}
 
 function Blocs({ blocs, chemin, colonnes }: { blocs: Bloc[]; chemin: string; colonnes?: boolean }) {
   return (
@@ -36,6 +40,7 @@ export default async function Page() {
   const d = (await getContenu()).leCosyBistrot;
   return (
     <>
+      <SeoEdition chemin="leCosyBistrot.meta" title={d.meta.title} description={d.meta.description} />
       <JsonLd
         data={graphe({
           path: "/le-cosy-bistrot/",
