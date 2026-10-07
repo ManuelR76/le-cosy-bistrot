@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { markdownToHtml, parseMarkdown, stripTags } from "./markdown";
+import { lireActualites, type Actualite } from "./edition/store";
 import { wpPage, wpPosts } from "./wordpress";
 
 const CONTENT = path.join(process.cwd(), "src/content");
@@ -47,6 +48,30 @@ async function articlesStatiques(): Promise<Article[]> {
   );
 }
 
+const echapper = (t: string) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+/** Actualité saisie par le client : texte brut → paragraphes HTML échappés. */
+export function actualiteVersArticle(a: Actualite): Article {
+  const paragraphes = a.texte
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const html = paragraphes.map((p) => `<p>${echapper(p).replace(/\n/g, "<br>")}</p>`).join("\n");
+  const texteSeul = paragraphes.join(" ");
+  return {
+    slug: a.slug,
+    h1: a.titre,
+    title: `${a.titre} - Le Cosy Bistrot`,
+    description: texteSeul.length > 155 ? texteSeul.slice(0, 154).replace(/\s+\S*$/, "") + "…" : texteSeul,
+    html,
+    extrait: extrait(html),
+    published: a.date,
+    modified: a.modifie,
+    category: "Actualités",
+    image: a.image,
+  };
+}
+
 /** Articles triés du plus récent au plus ancien (ordre WordPress). */
 export async function getArticles(): Promise<Article[]> {
   const wp = await wpPosts();
@@ -64,7 +89,9 @@ export async function getArticles(): Promise<Article[]> {
         image: p.featuredImage ? { src: p.featuredImage.node.sourceUrl, alt: p.featuredImage.node.altText } : null,
       }))
     : await articlesStatiques();
-  return list.sort((a, b) => b.published.localeCompare(a.published));
+  const pris = new Set(list.map((a) => a.slug));
+  const actus = (await lireActualites()).filter((a) => !pris.has(a.slug)).map(actualiteVersArticle);
+  return [...list, ...actus].sort((a, b) => b.published.localeCompare(a.published));
 }
 
 export async function getArticle(slug: string): Promise<Article | null> {

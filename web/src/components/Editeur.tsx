@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { mediaUrl } from "@/lib/media";
+import { EVT_NOUVELLE_ACTU, OngletActualites } from "./EditeurActualites";
 
 /*
  * Mode édition « sur la page » + panneau d'aide en bas à droite.
@@ -13,7 +14,7 @@ type Groupe = { chemin: string; srcs: string[]; el: HTMLElement; unique: boolean
 type Mod = { avant: string; apres: string; libelle: string };
 type Bulle = { role: "user" | "assistant"; content: string; nb?: number };
 type Version = { id: string; date: string };
-type Onglet = "assistant" | "modifs" | "google" | "historique" | "aide";
+type Onglet = "assistant" | "modifs" | "actus" | "google" | "historique" | "aide";
 
 const lireCookie = (nom: string) => document.cookie.split("; ").some((c) => c === `${nom}=1`);
 const champs = (chemin: string) => Array.from(document.querySelectorAll<HTMLElement>(`[data-edit="${CSS.escape(chemin)}"]`));
@@ -39,10 +40,28 @@ export function Editeur() {
   const [ouvert, setOuvert] = useState(true);
   const [onglet, setOnglet] = useState<Onglet>("assistant");
   const [seo, setSeo] = useState<{ chemin: string; title: string; description: string } | null>(null);
+  const [assistantActif, setAssistantActif] = useState(true);
+  const [demandeActu, setDemandeActu] = useState(0);
   const modsRef = useRef(mods);
   useEffect(() => {
     modsRef.current = mods;
   }, [mods]);
+
+  useEffect(() => {
+    if (!actif) return;
+    fetch("/api/edition/etat/")
+      .then((r) => r.json())
+      .then((j) => setAssistantActif(Boolean(j.assistant)))
+      .catch(() => {});
+    // Le bouton « + Ajouter une actualité » de la page ouvre l'onglet Actualités.
+    const ouvrirActus = () => {
+      setOuvert(true);
+      setOnglet("actus");
+      setDemandeActu((d) => d + 1);
+    };
+    window.addEventListener(EVT_NOUVELLE_ACTU, ouvrirActus);
+    return () => window.removeEventListener(EVT_NOUVELLE_ACTU, ouvrirActus);
+  }, [actif]);
 
   /** Enregistre (ou annule si on revient au texte d'origine) une modification. */
   const noter = useCallback((chemin: string, apres: string, avantParDefaut: string, libelle: string) => {
@@ -228,6 +247,7 @@ export function Editeur() {
               [
                 ["assistant", "Assistant"],
                 ["modifs", `Modifs${n ? ` (${n})` : ""}`],
+                ["actus", "Actus"],
                 ["google", "Google"],
                 ["historique", "Historique"],
                 ["aide", "Aide"],
@@ -245,7 +265,15 @@ export function Editeur() {
             ))}
           </nav>
           <div className="min-h-[220px] overflow-y-auto">
-            {onglet === "assistant" && <Assistant onAppliquer={appliquer} />}
+            {onglet === "assistant" &&
+              (assistantActif ? (
+                <Assistant onAppliquer={appliquer} />
+              ) : (
+                <p className="p-4 text-gris">
+                  L&apos;assistant n&apos;est pas encore activé. Vous pouvez modifier les textes directement en cliquant dessus.
+                </p>
+              ))}
+            {onglet === "actus" && <OngletActualites key={demandeActu} assistant={assistantActif} ouvrirDirect={demandeActu > 0} onFormFerme={() => setDemandeActu(0)} />}
             {onglet === "modifs" && <Modifs mods={mods} onAnnuler={annuler} />}
             {onglet === "google" && <Google seo={seo} mods={mods} onChanger={noter} />}
             {onglet === "historique" && <Historique />}
@@ -507,6 +535,10 @@ function Aide() {
       </p>
       <p>
         <strong>Annuler</strong> : onglet « Modifs » avant d&apos;enregistrer, ou « Historique » pour revenir à une version publiée.
+      </p>
+      <p>
+        <strong>Ajouter une actualité</strong> : onglet « Actus », puis « + Ajouter une actualité ». Titre, photo, texte : elle
+        apparaît aussitôt sur l&apos;accueil et dans « Toutes nos actualités ».
       </p>
       <p>
         <strong>Autres pages</strong> : naviguez avec le menu ; enregistrez avant de changer de page.

@@ -1,4 +1,5 @@
 import { CarteArticle } from "@/components/CarteArticle";
+import { BoutonAjoutActualite } from "@/components/EditeurActualites";
 import { JsonLd } from "@/components/JsonLd";
 import { getArticles } from "@/lib/content";
 import { graphe, meta } from "@/lib/seo";
@@ -28,6 +29,7 @@ export default async function Page() {
       />
       <section className="conteneur py-[50px] desk:py-[100px]">
         <h1 className="titre-1 mb-10">Articles</h1>
+        <BoutonAjoutActualite />
         <div className="grid gap-[50px] tab:grid-cols-2 desk:grid-cols-3">
           {articles.map((a) => (
             <CarteArticle key={a.slug} article={a} titreNiveau={2} />

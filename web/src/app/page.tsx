@@ -2,6 +2,7 @@ import { BordDechire } from "@/components/BordDechire";
 import { Bouton } from "@/components/Bouton";
 import { CarteArticle } from "@/components/CarteArticle";
 import { Diaporama } from "@/components/Diaporama";
+import { BoutonAjoutActualite } from "@/components/EditeurActualites";
 import { HeroSplit } from "@/components/HeroSplit";
 import { Horaires } from "@/components/Horaires";
 import { SeoEdition } from "@/components/SeoEdition";
@@ -121,6 +122,7 @@ export default async function Accueil() {
         <h2 className="titre-1 mb-10" {...ed("accueil.actualites.titre")}>
           {actualites.titre}
         </h2>
+        <BoutonAjoutActualite />
         <div className="grid gap-[50px] tab:grid-cols-2 desk:grid-cols-3">
           {articles.map((a) => (
             <CarteArticle key={a.slug} article={a} />

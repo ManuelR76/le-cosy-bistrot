@@ -59,6 +59,48 @@ export async function ecrireEdits(edits: Edits): Promise<void> {
   await fs.writeFile(path.join(DIR, FICHIER), json);
 }
 
+/* ---------- Actualités ajoutées par le client ---------- */
+export type Actualite = {
+  id: string;
+  slug: string;
+  titre: string;
+  texte: string; // paragraphes séparés par une ligne vide
+  date: string; // ISO
+  modifie: string; // ISO
+  image: { src: string; alt: string } | null;
+};
+export const TAG_ACTUS = "actualites";
+const FICHIER_ACTUS = "actualites.json";
+
+const lireActusBlob = unstable_cache(
+  async (): Promise<Actualite[]> => {
+    const f = await lireBlob(FICHIER_ACTUS);
+    return f ? (JSON.parse(f.data.toString("utf8")) as Actualite[]) : [];
+  },
+  ["contenu-actualites"],
+  { tags: [TAG_ACTUS], revalidate: 300 },
+);
+
+export async function lireActualites(): Promise<Actualite[]> {
+  try {
+    if (BLOB) return await lireActusBlob();
+    return JSON.parse(await fs.readFile(path.join(DIR, FICHIER_ACTUS), "utf8")) as Actualite[];
+  } catch {
+    return [];
+  }
+}
+
+export async function ecrireActualites(actus: Actualite[]): Promise<void> {
+  const json = JSON.stringify(actus, null, 2);
+  if (BLOB) {
+    const { put } = await import("@vercel/blob");
+    await put(FICHIER_ACTUS, json, { access: "private", addRandomSuffix: false, allowOverwrite: true, contentType: "application/json" });
+    return;
+  }
+  await fs.mkdir(DIR, { recursive: true });
+  await fs.writeFile(path.join(DIR, FICHIER_ACTUS), json);
+}
+
 export type Version = { id: string; date: string };
 
 /** Versions précédentes (les plus récentes d'abord). */

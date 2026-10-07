@@ -29,7 +29,8 @@ npm run dev · npm run build · node scripts/check-redirects.mjs http://localhos
 - [x] Stockage Blob privé `le-cosy-bistrot-blob` connecté (BLOB_STORE_ID + OIDC)
 - [x] Panneau d'édition : assistant, modifs, Google, historique, aide (décision 27)
 - [ ] Clé ANTHROPIC_API_KEY à ajouter sur Vercel pour activer l'assistant
-- [ ] Édition des articles et pages légales
+- [x] Ajout / modification / suppression d'actualités par le client (décision 28)
+- [ ] Édition des 12 articles d'origine et des pages légales
 - [x] Phase 5 (partiel) — 301, sitemap, robots, script de contrôle (33/33)
 - [ ] Phase 4 — GA4 réel en préprod, formulaires : aucun
 - [ ] Phase 6 — QA sur préprod avec vraies images (Lighthouse, comparaison mesurée)
