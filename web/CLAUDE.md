@@ -13,6 +13,11 @@ Lire `../contexte-projet/` avant chaque phase : inventaire, ARCHITECTURE.md, MIG
 - Aucun traceur ni iframe tierce avant consentement (`components/consent.ts`).
 - Ne rien mettre en prod, ne pas toucher au DNS ni au WordPress sans accord explicite.
 
+## Mode édition
+- `src/lib/edition/` : auth (cookie signé), store (Blob ou disque), contenu (fusion des modifications dans `src/content/pages.ts` + `site.config.ts`).
+- Rendre un texte éditable : `{...ed("accueil.hero.titre")}` sur l'élément ; photos : prop `chemin` de `Diaporama`/`Carrousel` ou `edPhotos()`.
+- Les clés acceptées par l'API suivent `^(site|accueil|privatisation|evenement|leCosyBistrot|retrouvezNous)\.…`.
+
 ## Commandes
 npm run dev · npm run build · node scripts/check-redirects.mjs http://localhost:3000
 
@@ -20,7 +25,9 @@ npm run dev · npm run build · node scripts/check-redirects.mjs http://localhos
 - [x] Phase 1 — Inventaire (07/10/2026)
 - [x] Phase 2 — Architecture (ARCHITECTURE.md)
 - [x] Phase 3 — Intégration de tous les gabarits sur repli statique ; articles et pages légales branchés WPGraphQL
-- [ ] Phase 3b — Champs ACF des pages (accueil, offres, options) branchés
+- [x] Édition sur la page (/connexion/) : textes et photos des pages, horaires, formules, coordonnées (décision 26)
+- [ ] Stockage Blob à créer sur Vercel (BLOB_READ_WRITE_TOKEN) — sinon 503 à l'enregistrement
+- [ ] Édition des articles et pages légales
 - [x] Phase 5 (partiel) — 301, sitemap, robots, script de contrôle (33/33)
 - [ ] Phase 4 — GA4 réel en préprod, formulaires : aucun
 - [ ] Phase 6 — QA sur préprod avec vraies images (Lighthouse, comparaison mesurée)

@@ -34,7 +34,7 @@ export default async function Article({ params }: PageProps<"/[slug]">) {
   const url = site.url + path;
 
   return (
-    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 py-[30px]">
+    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 pt-2 pb-[30px]">
       <JsonLd
         data={graphe({
           path,
@@ -73,7 +73,7 @@ export default async function Article({ params }: PageProps<"/[slug]">) {
           sizes="(min-width: 640px) 600px, 100vw"
           preload
           loading="eager"
-          className="mb-6 h-auto w-full max-w-[600px]"
+          className="mb-4 h-auto w-full max-w-[600px]"
         />
       )}
       <div className="prose-cosy" dangerouslySetInnerHTML={{ __html: a.html }} />

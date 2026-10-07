@@ -79,7 +79,7 @@
     @apply titre-1 mb-4 text-rouge-vif;
   }
   .prose-cosy h2 {
-    @apply titre-2 mt-6 mb-4 text-beige;
+    @apply titre-2 mt-2 mb-4 text-beige;
   }
   .prose-cosy h3 {
     @apply font-accent mt-5 mb-3 text-[25px] leading-none text-beige;

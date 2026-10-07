@@ -10,10 +10,12 @@
     "prebuild": "node scripts/polices.mjs"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.1",
     "marked": "^18.1.0",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

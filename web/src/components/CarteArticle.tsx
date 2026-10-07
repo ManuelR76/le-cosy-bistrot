@@ -12,14 +12,14 @@ export function CarteArticle({ article, titreNiveau = 3 }: { article: Article; t
         {article.image && <Media src={article.image.src} alt={article.image.alt} sizes="(min-width: 1025px) 400px, (min-width: 768px) 50vw, 100vw" />}
         <BordDechire couleur="noir" bas={false} />
       </div>
-      <div className="relative flex flex-1 flex-col gap-4 bg-rouge p-5 pb-10">
+      <div className="relative flex flex-1 flex-col bg-rouge p-5">
         <T className="titre-2 uppercase">
           <Link href={href} className="hover:text-beige">
             {article.h1}
           </Link>
         </T>
-        <p className="text-justify">{article.extrait}</p>
-        <Link href={href} className="btn btn-clair self-start" aria-label={`Lire l'article : ${article.h1}`}>
+        <p className="mt-[10px] text-justify">{article.extrait}</p>
+        <Link href={href} className="btn btn-clair mt-6 self-start" aria-label={`Lire l'article : ${article.h1}`}>
           Lire l&apos;article
         </Link>
         <BordDechire couleur="noir" haut={false} />

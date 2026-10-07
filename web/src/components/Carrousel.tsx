@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Image } from "@/content/pages";
+import { edPhotos } from "@/lib/edition/attrs";
 import { Media } from "./Media";
 
 /**
  * Carrousel d'images (réglages Elementor d'origine) : 3 / 2 / 1 vues, espacement 64 / 32 / 16 px,
  * défilement auto 5 s, pause au survol, au focus et si prefers-reduced-motion.
  */
-export function Carrousel({ images, label }: { images: Image[]; label: string }) {
+export function Carrousel({ images, label, chemin }: { images: Image[]; label: string; chemin?: string }) {
   const piste = useRef<HTMLUListElement>(null);
   const [pause, setPause] = useState(false);
 
@@ -27,7 +28,7 @@ export function Carrousel({ images, label }: { images: Image[]; label: string })
   }, [pause]);
 
   return (
-    <section aria-label={label} className="conteneur py-[50px] desk:px-[143px] desk:py-[100px]">
+    <section aria-label={label} className="conteneur py-[50px] desk:px-[143px] desk:py-[100px]" {...(chemin ? edPhotos(chemin, images) : {})}>
       <ul
         ref={piste}
         onMouseEnter={() => setPause(true)}

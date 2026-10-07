@@ -1,11 +1,11 @@
 import type { PageOffre as Data } from "@/content/pages";
+import { graphe } from "@/lib/seo";
 import { Carrousel } from "./Carrousel";
 import { HeroSplit } from "./HeroSplit";
 import { JsonLd } from "./JsonLd";
 import { SectionTexteDiaporama } from "./SectionTexteDiaporama";
-import { graphe } from "@/lib/seo";
 
-export function PageOffre({ data, path, crumb }: { data: Data; path: string; crumb: string }) {
+export function PageOffre({ data, cle, path, crumb }: { data: Data; cle: "privatisation" | "evenement"; path: string; crumb: string }) {
   return (
     <>
       <JsonLd
@@ -19,11 +19,11 @@ export function PageOffre({ data, path, crumb }: { data: Data; path: string; cru
           ],
         })}
       />
-      <HeroSplit {...data.hero} />
-      {data.sections.map((s) => (
-        <SectionTexteDiaporama key={s.titre} section={s} />
+      <HeroSplit chemin={`${cle}.hero`} {...data.hero} />
+      {data.sections.map((s, i) => (
+        <SectionTexteDiaporama key={i} section={s} chemin={`${cle}.sections.${i}`} />
       ))}
-      <Carrousel images={data.galerie} label={`Photos : ${crumb}`} />
+      <Carrousel images={data.galerie} label={`Photos : ${crumb}`} chemin={`${cle}.galerie`} />
     </>
   );
 }

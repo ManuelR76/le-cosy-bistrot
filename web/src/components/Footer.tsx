@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { site } from "@/site.config";
+import { ed } from "@/lib/edition/attrs";
+import { getContenu } from "@/lib/edition/contenu";
 import { CarteGoogle } from "./CarteGoogle";
 import { GestionCookies } from "./GestionCookies";
 import { IconeLieu, IconeTel } from "./Icones";
 import { Logo } from "./Logo";
 
-export function Footer() {
+export async function Footer() {
+  const { site } = await getContenu();
   return (
     <footer className="mt-auto">
       <div className="conteneur grid gap-10 py-16 tab:grid-cols-2 desk:grid-cols-[364px_414px_1fr] desk:gap-0 desk:py-[50px] desk:[&>*:nth-child(2)]:pl-[50px]">
@@ -13,11 +15,11 @@ export function Footer() {
           <Logo />
           <a href={site.mapsFooter} target="_blank" rel="noopener" className="flex items-center gap-3 hover:text-beige">
             <IconeLieu className="h-[18px] w-[18px] shrink-0" />
-            {site.adresse}
+            <span {...ed("site.adresse")}>{site.adresse}</span>
           </a>
           <a href={site.telephoneHref} className="flex items-center gap-3 hover:text-beige">
             <IconeTel className="h-[18px] w-[18px] shrink-0" />
-            {site.telephone}
+            <span {...ed("site.telephone")}>{site.telephone}</span>
           </a>
         </div>
         <div>

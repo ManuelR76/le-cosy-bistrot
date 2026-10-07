@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Image } from "@/content/pages";
+import { edPhotos } from "@/lib/edition/attrs";
 import { Media } from "./Media";
 
 type Props = {
@@ -11,10 +12,12 @@ type Props = {
   duree?: number;
   priority?: boolean;
   voile?: boolean;
+  /** Chemin du contenu, pour le mode édition (ex. « accueil.hero.fond »). */
+  chemin?: string;
 };
 
 /** Diaporama de fond en fondu enchaîné. Fixe sur la 1re image si prefers-reduced-motion. */
-export function Diaporama({ images, sizes, duree = 7000, priority, voile }: Props) {
+export function Diaporama({ images, sizes, duree = 7000, priority, voile, chemin }: Props) {
   const [actif, setActif] = useState(0);
 
   useEffect(() => {
@@ -26,7 +29,7 @@ export function Diaporama({ images, sizes, duree = 7000, priority, voile }: Prop
   }, [images.length, duree]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden" aria-hidden={images.every((i) => !i.alt) || undefined}>
+    <div className="absolute inset-0 overflow-hidden" aria-hidden={images.every((i) => !i.alt) || undefined} {...(chemin ? edPhotos(chemin, images) : {})}>
       {images.map((img, i) => (
         <div
           key={img.src}

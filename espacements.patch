@@ -1,0 +1,280 @@
+diff --git a/web/src/app/[slug]/page.tsx b/web/src/app/[slug]/page.tsx
+index 755c8b3..069c668 100644
+--- a/web/src/app/[slug]/page.tsx
++++ b/web/src/app/[slug]/page.tsx
+@@ -34,7 +34,7 @@ export default async function Article({ params }: PageProps<"/[slug]">) {
+   const url = site.url + path;
+ 
+   return (
+-    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 py-[30px]">
++    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 pt-2 pb-[30px]">
+       <JsonLd
+         data={graphe({
+           path,
+@@ -73,7 +73,7 @@ export default async function Article({ params }: PageProps<"/[slug]">) {
+           sizes="(min-width: 640px) 600px, 100vw"
+           preload
+           loading="eager"
+-          className="mb-6 h-auto w-full max-w-[600px]"
++          className="mb-4 h-auto w-full max-w-[600px]"
+         />
+       )}
+       <div className="prose-cosy" dangerouslySetInnerHTML={{ __html: a.html }} />
+diff --git a/web/src/app/globals.css b/web/src/app/globals.css
+index b015f23..4fc3d7c 100644
+--- a/web/src/app/globals.css
++++ b/web/src/app/globals.css
+@@ -79,7 +79,7 @@
+     @apply titre-1 mb-4 text-rouge-vif;
+   }
+   .prose-cosy h2 {
+-    @apply titre-2 mt-6 mb-4 text-beige;
++    @apply titre-2 mt-2 mb-4 text-beige;
+   }
+   .prose-cosy h3 {
+     @apply font-accent mt-5 mb-3 text-[25px] leading-none text-beige;
+diff --git a/web/src/app/le-cosy-bistrot/page.tsx b/web/src/app/le-cosy-bistrot/page.tsx
+index cad49a2..eac37ca 100644
+--- a/web/src/app/le-cosy-bistrot/page.tsx
++++ b/web/src/app/le-cosy-bistrot/page.tsx
+@@ -6,12 +6,12 @@ import { graphe, meta } from "@/lib/seo";
+ 
+ export const metadata = meta({ ...d.meta, path: "/le-cosy-bistrot/" });
+ 
+-function Blocs({ blocs }: { blocs: Bloc[] }) {
++function Blocs({ blocs, colonnes }: { blocs: Bloc[]; colonnes?: boolean }) {
+   return (
+-    <div className="flex flex-col gap-[14.4px]">
++    <div className={colonnes ? "tab:columns-2 tab:gap-16 [&>*]:mb-[14.4px] [&>*]:break-inside-avoid" : "flex flex-col gap-[14.4px]"}>
+       {blocs.map((b) =>
+         b.type === "h2" ? (
+-          <h2 key={b.texte} className="text-base font-bold">
++          <h2 key={b.texte} className="titre-2 mt-2 mb-[16px]! break-after-avoid">
+             {b.texte}
+           </h2>
+         ) : b.type === "strong" ? (
+@@ -40,7 +40,7 @@ export default function Page() {
+           ],
+         })}
+       />
+-      <section className="grid items-center gap-8 tab:grid-cols-[minmax(0,778px)_1fr] tab:gap-16 tab:pr-4 desk:pr-16">
++      <section className="grid items-center gap-8 tab:grid-cols-[54.6vw_1fr] tab:gap-16 tab:pr-4 desk:pr-16">
+         <div className="relative aspect-[3/2] w-full">
+           <Media src={d.image.src} alt={d.image.alt} sizes="(min-width: 768px) 55vw, 100vw" priority />
+         </div>
+@@ -50,8 +50,9 @@ export default function Page() {
+           <Blocs blocs={d.blocs} />
+         </div>
+       </section>
++      {/* Texte sur deux colonnes CSS (gouttière 64 px), comme le bloc Elementor d'origine */}
+       <section className="conteneur py-[50px] desk:py-[100px]">
+-        <Blocs blocs={d.suite} />
++        <Blocs blocs={d.suite} colonnes />
+       </section>
+       <Carrousel images={d.galerie} label="Photos du Cosy Bistrot" />
+     </>
+diff --git a/web/src/app/mentions-legales/page.tsx b/web/src/app/mentions-legales/page.tsx
+index 462cfed..f409315 100644
+--- a/web/src/app/mentions-legales/page.tsx
++++ b/web/src/app/mentions-legales/page.tsx
+@@ -13,7 +13,7 @@ export async function generateMetadata() {
+ export default async function Page() {
+   const p = await getPageLegale(SLUG);
+   return (
+-    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 py-[30px]">
++    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 pt-2 pb-[30px]">
+       <JsonLd
+         data={graphe({
+           path: `/${SLUG}/`,
+@@ -25,7 +25,7 @@ export default async function Page() {
+           ],
+         })}
+       />
+-      <h1 className="titre-1 mb-6 text-rouge-vif">{p.h1}</h1>
++      <h1 className="titre-1 mb-4 text-rouge-vif">{p.h1}</h1>
+       <div className="prose-cosy break-words" dangerouslySetInnerHTML={{ __html: p.html }} />
+     </article>
+   );
+diff --git a/web/src/app/page.tsx b/web/src/app/page.tsx
+index a94de55..229d1e9 100644
+--- a/web/src/app/page.tsx
++++ b/web/src/app/page.tsx
+@@ -28,9 +28,9 @@ export default async function Accueil() {
+       <section className="conteneur grid items-start gap-8 py-[50px] tab:grid-cols-2 tab:gap-[50px] desk:py-[100px]">
+         <div>
+           <h2 className="titre-2">{horaires.titre}</h2>
+-          <p className="mt-5">{horaires.texte}</p>
+-          <Horaires className="mt-5" />
+-          <Bouton cta={horaires.cta} className="mt-6" />
++          <p className="mt-[10px]">{horaires.texte}</p>
++          <Horaires className="mt-[34px]" />
++          <Bouton cta={horaires.cta} className="mt-5" />
+         </div>
+         <div className="relative h-[350px] tab:h-[608px]">
+           <Diaporama images={horaires.diaporama} sizes="(min-width: 768px) 50vw, 100vw" />
+@@ -40,24 +40,24 @@ export default async function Accueil() {
+ 
+       {/* Menus et formules */}
+       <section className="bg-rouge">
+-        <div className="conteneur-large grid grid-cols-[minmax(0,1fr)] gap-8 py-[50px] desk:grid-cols-[1fr_383px] desk:gap-[50px] desk:py-[100px]">
++        <div className="conteneur-large grid grid-cols-[minmax(0,1fr)] gap-8 py-[50px] desk:grid-cols-[1fr_383px] desk:gap-5 desk:py-[100px]">
+           <div>
+-            <h2 className="titre-2">{menus.titre}</h2>
++            <h2 className="titre-1">{menus.titre}</h2>
+             <div className="mt-5 flex flex-col gap-[14.4px]">
+               {menus.paragraphes.map((p) => (
+                 <p key={p}>{p}</p>
+               ))}
+             </div>
+-            <Bouton cta={menus.cta} clair className="mt-6" />
++            <Bouton cta={menus.cta} clair className="mt-[34px]" />
+           </div>
+           <ul className="flex flex-col gap-5">
+             {site.formules.map((f) => (
+               <li key={f.titre} className="relative flex items-center justify-between gap-[10px] bg-noir p-5">
+-                <div className="w-[250px] max-w-[70%]">
++                <div className="w-[250px] max-w-[70%] desk:max-w-none">
+                   <h3 className="titre-2 text-beige">{f.titre}</h3>
+-                  <p className="mt-2 font-accent text-[16px] leading-none font-semibold">{f.detail}</p>
++                  <p className="mt-[10px] font-accent text-[22px] leading-[22px] font-semibold">{f.detail}</p>
+                 </div>
+-                <p className="w-[83px] shrink-0 text-right">{f.prix}</p>
++                <p className="w-[83px] shrink-0 text-right leading-4">{f.prix}</p>
+                 <BordDechire couleur="rouge" hauteur={15} />
+               </li>
+             ))}
+@@ -73,10 +73,10 @@ export default async function Accueil() {
+               <Diaporama images={t.diaporama} sizes="(min-width: 768px) 50vw, 100vw" />
+               <BordDechire couleur="noir" bas={false} />
+             </div>
+-            <div className="relative flex flex-1 flex-col gap-4 bg-rouge p-5 pb-10">
++            <div className="relative flex flex-1 flex-col bg-rouge p-5 pb-[19px]">
+               <h2 className="titre-2">{t.titre}</h2>
+-              <p>{t.texte}</p>
+-              <Bouton cta={t.cta} clair className="self-start" />
++              <p className="mt-[10px]">{t.texte}</p>
++              <Bouton cta={t.cta} clair className="mt-[25px] self-start" />
+               <BordDechire couleur="noir" haut={false} />
+             </div>
+           </article>
+@@ -85,7 +85,7 @@ export default async function Accueil() {
+ 
+       {/* Actualités */}
+       <section className="conteneur pb-[50px] desk:pb-[100px]">
+-        <h2 className="titre-2 mb-8">{actualites.titre}</h2>
++        <h2 className="titre-1 mb-10">{actualites.titre}</h2>
+         <div className="grid gap-[50px] tab:grid-cols-2 desk:grid-cols-3">
+           {articles.map((a) => (
+             <CarteArticle key={a.slug} article={a} />
+diff --git a/web/src/app/politique-de-confidentialite/page.tsx b/web/src/app/politique-de-confidentialite/page.tsx
+index eec0ce2..4084d8b 100644
+--- a/web/src/app/politique-de-confidentialite/page.tsx
++++ b/web/src/app/politique-de-confidentialite/page.tsx
+@@ -13,7 +13,7 @@ export async function generateMetadata() {
+ export default async function Page() {
+   const p = await getPageLegale(SLUG);
+   return (
+-    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 py-[30px]">
++    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 pt-2 pb-[30px]">
+       <JsonLd
+         data={graphe({
+           path: `/${SLUG}/`,
+@@ -25,7 +25,7 @@ export default async function Page() {
+           ],
+         })}
+       />
+-      <h1 className="titre-1 mb-6 text-rouge-vif">{p.h1}</h1>
++      <h1 className="titre-1 mb-4 text-rouge-vif">{p.h1}</h1>
+       <div className="prose-cosy break-words" dangerouslySetInnerHTML={{ __html: p.html }} />
+     </article>
+   );
+diff --git a/web/src/app/retrouvez-nous/page.tsx b/web/src/app/retrouvez-nous/page.tsx
+index dc5d389..d0f7241 100644
+--- a/web/src/app/retrouvez-nous/page.tsx
++++ b/web/src/app/retrouvez-nous/page.tsx
+@@ -27,15 +27,15 @@ export default function Page() {
+         <div className="px-4 tab:px-0 tab:pt-[59px]">
+           <h1 className="titre-1">{d.titre}</h1>
+           <p className="mt-5">{d.texte}</p>
+-          <ul className="mt-5 flex flex-col gap-5">
++          <ul className="mt-[34px] flex flex-col gap-5">
+             <li>
+-              <a href={site.mapsFooter} target="_blank" rel="noopener" className="flex items-center gap-4 hover:text-beige">
++              <a href={site.mapsFooter} target="_blank" rel="noopener" className="flex items-center gap-[10px] leading-4 hover:text-beige">
+                 <IconeLieu className="h-[25px] w-[25px] shrink-0" />
+                 {site.adresse}
+               </a>
+             </li>
+             <li>
+-              <a href={site.telephoneHref} className="flex items-center gap-4 hover:text-beige">
++              <a href={site.telephoneHref} className="flex items-center gap-[10px] leading-4 hover:text-beige">
+                 <IconeTel className="h-[25px] w-[25px] shrink-0" />
+                 {site.telephone}
+               </a>
+diff --git a/web/src/components/CarteArticle.tsx b/web/src/components/CarteArticle.tsx
+index 593fb01..181194f 100644
+--- a/web/src/components/CarteArticle.tsx
++++ b/web/src/components/CarteArticle.tsx
+@@ -12,14 +12,14 @@ export function CarteArticle({ article, titreNiveau = 3 }: { article: Article; t
+         {article.image && <Media src={article.image.src} alt={article.image.alt} sizes="(min-width: 1025px) 400px, (min-width: 768px) 50vw, 100vw" />}
+         <BordDechire couleur="noir" bas={false} />
+       </div>
+-      <div className="relative flex flex-1 flex-col gap-4 bg-rouge p-5 pb-10">
++      <div className="relative flex flex-1 flex-col bg-rouge p-5">
+         <T className="titre-2 uppercase">
+           <Link href={href} className="hover:text-beige">
+             {article.h1}
+           </Link>
+         </T>
+-        <p className="text-justify">{article.extrait}</p>
+-        <Link href={href} className="btn btn-clair self-start" aria-label={`Lire l'article : ${article.h1}`}>
++        <p className="mt-[10px] text-justify">{article.extrait}</p>
++        <Link href={href} className="btn btn-clair mt-6 self-start" aria-label={`Lire l'article : ${article.h1}`}>
+           Lire l&apos;article
+         </Link>
+         <BordDechire couleur="noir" haut={false} />
+diff --git a/web/src/components/HeroSplit.tsx b/web/src/components/HeroSplit.tsx
+index c0cc003..da195b8 100644
+--- a/web/src/components/HeroSplit.tsx
++++ b/web/src/components/HeroSplit.tsx
+@@ -30,12 +30,12 @@ export function HeroSplit({ titre, sousTitre, paragraphes, cta, fond, haut, bas
+         <div className={`relative z-[1] ${accueil ? "tab:w-[400px]" : "max-w-[600px]"}`}>
+           <h1 className="titre-1">{titre}</h1>
+           <p className="titre-2 mt-[10px]">{sousTitre}</p>
+-          <div className="mt-5 flex flex-col gap-[14.4px] text-justify">
++          <div className={`flex flex-col gap-[14.4px] text-justify ${accueil ? "mt-[10px]" : "mt-5"}`}>
+             {paragraphes.map((p) => (
+               <p key={p}>{p}</p>
+             ))}
+           </div>
+-          {cta && <Bouton cta={cta} className="mt-5" />}
++          {cta && <Bouton cta={cta} className={accueil ? "mt-[25px]" : "mt-[34px]"} />}
+         </div>
+       </div>
+       <div className="hidden grid-rows-2 gap-5 tab:grid">
+diff --git a/web/src/components/Horaires.tsx b/web/src/components/Horaires.tsx
+index ec9721c..c244d01 100644
+--- a/web/src/components/Horaires.tsx
++++ b/web/src/components/Horaires.tsx
+@@ -2,7 +2,7 @@ import { site } from "@/site.config";
+ 
+ export function Horaires({ className = "" }: { className?: string }) {
+   return (
+-    <ul className={`flex flex-col gap-[12.5px] ${className}`}>
++    <ul className={`flex flex-col gap-[25px] ${className}`}>
+       {site.horaires.map((h) => (
+         <li key={h.jour} className="flex items-center gap-2">
+           <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-blanc" />
+diff --git a/web/src/components/SectionTexteDiaporama.tsx b/web/src/components/SectionTexteDiaporama.tsx
+index 7579756..03963f5 100644
+--- a/web/src/components/SectionTexteDiaporama.tsx
++++ b/web/src/components/SectionTexteDiaporama.tsx
+@@ -15,7 +15,7 @@ export function SectionTexteDiaporama({ section }: { section: Section }) {
+             <p key={p}>{p}</p>
+           ))}
+         </div>
+-        {section.cta && <Bouton cta={section.cta} className="mt-5" />}
++        {section.cta && <Bouton cta={section.cta} className="mt-[34px]" />}
+       </div>
+       <div className="relative h-[300px] tab:h-[500px]">
+         <Diaporama images={section.diaporama} sizes="(min-width: 768px) 50vw, 100vw" />

@@ -1,10 +1,13 @@
-import { site } from "@/site.config";
+import { ed } from "@/lib/edition/attrs";
+import { getContenu } from "@/lib/edition/contenu";
+import { site as siteStatique } from "@/site.config";
 import { IconeLieu, IconeTel } from "./Icones";
 import { Logo } from "./Logo";
 import { MenuMobile } from "./MenuMobile";
 import { NavLien } from "./NavLien";
 
-export function Header() {
+export async function Header() {
+  const { site } = await getContenu();
   return (
     <>
       <a href="#contenu" className="sr-only z-[60] bg-rouge px-4 py-2 focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
@@ -15,11 +18,11 @@ export function Header() {
         <div className="conteneur flex flex-col gap-1 py-2 text-[16px] tab:flex-row tab:justify-end tab:gap-6 tab:py-[5px]">
           <a href={site.mapsHeader} target="_blank" rel="noopener" className="flex items-center gap-2 hover:text-beige">
             <IconeLieu className="h-4 w-4 shrink-0" />
-            {site.adresse}
+            <span {...ed("site.adresse")}>{site.adresse}</span>
           </a>
           <a href={site.telephoneHref} className="flex items-center gap-2 hover:text-beige">
             <IconeTel className="h-4 w-4 shrink-0" />
-            {site.telephone}
+            <span {...ed("site.telephone")}>{site.telephone}</span>
           </a>
         </div>
       </aside>
@@ -29,7 +32,7 @@ export function Header() {
           <Logo />
           <nav aria-label="Navigation principale" className="hidden desk:block">
             <ul className="flex gap-6">
-              {site.nav.map((l) => (
+              {siteStatique.nav.map((l) => (
                 <li key={l.href}>
                   <NavLien href={l.href}>{l.label}</NavLien>
                 </li>

@@ -13,7 +13,7 @@ export async function generateMetadata() {
 export default async function Page() {
   const p = await getPageLegale(SLUG);
   return (
-    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 py-[30px]">
+    <article className="mx-auto w-full max-w-[calc(var(--container-article)+2rem)] px-4 pt-2 pb-[30px]">
       <JsonLd
         data={graphe({
           path: `/${SLUG}/`,
@@ -25,7 +25,7 @@ export default async function Page() {
           ],
         })}
       />
-      <h1 className="titre-1 mb-6 text-rouge-vif">{p.h1}</h1>
+      <h1 className="titre-1 mb-4 text-rouge-vif">{p.h1}</h1>
       <div className="prose-cosy break-words" dangerouslySetInnerHTML={{ __html: p.html }} />
     </article>
   );
