@@ -1,6 +1,7 @@
 import { JsonLd } from "@/components/JsonLd";
 import { getPageLegale } from "@/lib/content";
 import { graphe, meta } from "@/lib/seo";
+import { ed } from "@/lib/edition/attrs";
 
 export const revalidate = 60;
 const SLUG = "mentions-legales" as const;
@@ -25,7 +26,9 @@ export default async function Page() {
           ],
         })}
       />
-      <h1 className="titre-1 mb-4 text-rouge-vif">{p.h1}</h1>
+      <h1 className="titre-1 mb-4 text-rouge-vif" {...ed(`${p.edition}.titre`)}>
+        {p.h1}
+      </h1>
       <div className="prose-cosy break-words" dangerouslySetInnerHTML={{ __html: p.html }} />
     </article>
   );

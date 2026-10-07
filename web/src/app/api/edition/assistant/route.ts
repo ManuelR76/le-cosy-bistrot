@@ -6,7 +6,7 @@ import { sessionValide } from "@/lib/edition/auth";
  * en propositions de modifications sur les seuls champs modifiables de la page.
  * Rien n'est enregistré ici : le client voit l'aperçu sur la page et valide avec « Enregistrer ».
  */
-const CLE = /^(site|accueil|privatisation|evenement|leCosyBistrot|retrouvezNous)(\.[A-Za-z0-9]+){1,6}$/;
+const CLE = /^(site|accueil|privatisation|evenement|leCosyBistrot|retrouvezNous|articles|legal)(\.[A-Za-z0-9]+){1,6}$/;
 const MODELE = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
 
 type Champ = { chemin: string; texte: string; role?: string };

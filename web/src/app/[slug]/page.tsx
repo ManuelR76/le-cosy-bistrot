@@ -5,6 +5,7 @@ import { getArticle, getArticles } from "@/lib/content";
 import { mediaUrl } from "@/lib/media";
 import { graphe, meta } from "@/lib/seo";
 import { site } from "@/site.config";
+import { ed } from "@/lib/edition/attrs";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -63,7 +64,9 @@ export default async function Article({ params }: PageProps<"/[slug]">) {
           ],
         })}
       />
-      <h1 className="titre-1 mb-4 text-rouge-vif">{a.h1}</h1>
+      <h1 className="titre-1 mb-4 text-rouge-vif" {...(a.edition ? ed(`${a.edition}.titre`) : {})}>
+        {a.h1}
+      </h1>
       {a.image && (
         <Image
           src={mediaUrl(a.image.src)}

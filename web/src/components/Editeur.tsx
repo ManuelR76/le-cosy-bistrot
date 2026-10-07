@@ -98,6 +98,7 @@ export function Editeur() {
       el.addEventListener("input", onInput);
       el.addEventListener("keydown", onKey);
       el.closest("a")?.addEventListener("click", bloquerLien);
+      el.querySelectorAll("a").forEach((a) => a.addEventListener("click", bloquerLien));
     }
     const seoEl = document.querySelector<HTMLElement>("[data-seo]");
     const raf = window.setTimeout(() => {
@@ -122,6 +123,7 @@ export function Editeur() {
         el.removeEventListener("input", onInput);
         el.removeEventListener("keydown", onKey);
         el.closest("a")?.removeEventListener("click", bloquerLien);
+        el.querySelectorAll("a").forEach((a) => a.removeEventListener("click", bloquerLien));
       }
     };
   }, [actif, noter]);

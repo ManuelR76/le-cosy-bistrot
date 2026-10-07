@@ -1,7 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { markdownToHtml, parseMarkdown, stripTags } from "./markdown";
-import { lireActualites, type Actualite } from "./edition/store";
+import { lireActualites, lireEdits, type Actualite } from "./edition/store";
+import { blocsModifiables, cleDe } from "./edition/blocs";
 import { wpPage, wpPosts } from "./wordpress";
 
 const CONTENT = path.join(process.cwd(), "src/content");
@@ -17,6 +18,8 @@ export type Article = {
   modified: string;
   category: string;
   image: { src: string; alt: string } | null;
+  /** Chemin d'édition sur la page (absent pour les actualités du client, qui ont leur propre formulaire). */
+  edition?: string;
 };
 
 /** Extrait façon WordPress (premiers mots du chapô, « … »). */
@@ -89,6 +92,13 @@ export async function getArticles(): Promise<Article[]> {
         image: p.featuredImage ? { src: p.featuredImage.node.sourceUrl, alt: p.featuredImage.node.altText } : null,
       }))
     : await articlesStatiques();
+  const edits = await lireEdits();
+  for (const a of list) {
+    a.edition = `articles.${cleDe(a.slug)}`;
+    a.h1 = edits[`${a.edition}.titre`] ?? a.h1;
+    a.html = blocsModifiables(a.html, a.edition, edits);
+    a.extrait = extrait(a.html);
+  }
   const pris = new Set(list.map((a) => a.slug));
   const actus = (await lireActualites()).filter((a) => !pris.has(a.slug)).map(actualiteVersArticle);
   return [...list, ...actus].sort((a, b) => b.published.localeCompare(a.published));
@@ -98,7 +108,7 @@ export async function getArticle(slug: string): Promise<Article | null> {
   return (await getArticles()).find((a) => a.slug === slug) ?? null;
 }
 
-export type PageLegale = { title: string; description: string; h1: string; html: string; modified: string };
+export type PageLegale = { title: string; description: string; h1: string; html: string; modified: string; edition: string };
 
 export async function getPageLegale(slug: "mentions-legales" | "politique-de-confidentialite"): Promise<PageLegale> {
   const { data, body } = parseMarkdown(await fs.readFile(path.join(CONTENT, "legal", `${slug}.md`), "utf8"));
@@ -111,5 +121,8 @@ export async function getPageLegale(slug: "mentions-legales" | "politique-de-con
     modified: data.modified,
   };
   const wp = await wpPage(`/${slug}/`);
-  return wp ? { ...statique, h1: wp.title, html: wp.content, modified: wp.modified } : statique;
+  const p = wp ? { ...statique, h1: wp.title, html: wp.content, modified: wp.modified } : statique;
+  const edits = await lireEdits();
+  const edition = `legal.${cleDe(slug)}`;
+  return { ...p, h1: edits[`${edition}.titre`] ?? p.h1, html: blocsModifiables(p.html, edition, edits), edition };
 }

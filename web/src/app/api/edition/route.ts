@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { sessionValide } from "@/lib/edition/auth";
 import { ecrireEdits, lireEdits, stockageDisponible, TAG } from "@/lib/edition/store";
 
-const CLE = /^(site|accueil|privatisation|evenement|leCosyBistrot|retrouvezNous)(\.[A-Za-z0-9]+){1,6}$/;
+const CLE = /^(site|accueil|privatisation|evenement|leCosyBistrot|retrouvezNous|articles|legal)(\.[A-Za-z0-9]+){1,6}$/;
 
 /** Enregistre un lot de modifications { "accueil.hero.titre": "…" }. */
 export async function POST(req: Request) {
