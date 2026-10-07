@@ -76,7 +76,11 @@ export async function POST(req: Request) {
       messages,
     }),
     signal: AbortSignal.timeout(45000),
-  }).catch(() => null);
+  }).catch((e) => {
+    console.error("[assistant] appel impossible", e);
+    return null;
+  });
+  if (res && !res.ok) console.error("[assistant] API", res.status, (await res.text()).slice(0, 500));
   if (!res?.ok) return NextResponse.json({ erreur: "L'assistant ne répond pas pour le moment. Réessayez dans un instant." }, { status: 502 });
 
   const data = (await res.json()) as { content?: { type: string; input?: { message?: string; modifications?: { chemin: string; valeur: string }[] } }[] };
