@@ -1,0 +1,26 @@
+url,type,statut,title,nb_mots,gabarit
+/,page,200,Accueil - Le Cosy Bistrot,664,accueil
+/le-cosy-bistrot/,page,200,Le Cosy Bistrot - Le Cosy Bistrot,389,page-presentation
+/privatisation/,page,200,Privatisation - Le Cosy Bistrot,319,page-presentation
+/evenement/,page,200,Évènement - Le Cosy Bistrot,302,page-presentation
+/retrouvez-nous/,page,200,Retrouvez-nous - Le Cosy Bistrot,255,contact
+/mentions-legales/,page,200,Mentions Légales - Le Cosy Bistrot,1107,legal
+/politique-de-confidentialite/,page,200,Politique de confidentialité - Le Cosy Bistrot,1649,legal
+/articles/,archive,200,Articles - Le Cosy Bistrot,553,archive
+/le-cosy-bistrot-votre-destination-culinaire-a-bourg-achard/,article,200,Le Cosy Bistrot à Bourg-Achard,512,article
+/restaurant-le-cosy-bistrot-votre-pause-gourmande-quotidienne-a-bourg-achard/,article,200,Faites une pause gourmande au restaurant,546,article
+/les-delices-au-menu-du-cosy-bistrot-des-plats-allechants-pour-toutes-les-envies/,article,200,Explorez notre menu,560,article
+/salle-privatisee-faites-de-votre-evenement-un-moment-inoubliable-au-cosy-bistrot/,article,200,Salle privatisée pour vos évènements,540,article
+/privatisation-pour-mariages-et-anniversaires-celebrez-au-cosy-bistrot/,article,200,Privatisation mariages et anniversaires,677,article
+/organisation-devenements-ambiance-et-convivialite-au-cosy-bistrot/,article,200,Organisation d’évènements,515,article
+/plongez-dans-lambiance-animee-de-nos-soirees-evenements-au-cosy-bistrot/,article,200,Participez aux soirées événements,435,article
+/des-soirees-a-theme-inoubliables-au-cosy-bistrot/,article,200,Soirées à thème toute occasion,460,article
+/vivez-des-soirees-inoubliables-au-son-de-nos-concerts-et-spectacles-en-live/,article,200,Concerts et spectacles en live,459,article
+/votre-evenement-special-au-cosy-bistrot-dans-un-cadre-chaleureux-et-convivial/,article,200,Votre événement spécial à Bourg-Achard,459,article
+/bienvenue-chez-le-cosy-un-bistrot-convivial-a-bourg-achard/,article,200,Bistrot convivial à Bourg-Achard,475,article
+/menu-cosy-ou-menu-express-pour-tous-les-gouts-au-cosy-bistrot/,article,200,Menu Cosy ou menu Express,460,article
+/category/restaurant/,categorie,200,Restaurant,432,archive
+/category/bristot/,categorie,200,Bristot,231,archive
+/category/soiree-evenement/,categorie,200,Soirée évènement,430,archive
+/category/privatisation-de-restaurant/,categorie,200,privatisation de restaurant,364,archive
+/tag/bourg-achard/,tag,200,Bourg-Achard,822,archive
