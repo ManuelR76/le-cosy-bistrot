@@ -50,7 +50,7 @@ export default async function Page() {
           ],
         })}
       />
-      <section className="grid items-center gap-8 tab:grid-cols-[54.6vw_1fr] tab:gap-16 tab:pr-4 desk:pr-16">
+      <section className="grid items-center gap-8 tab:grid-cols-[54.6vw_1fr] tab:gap-16 tab:max-desk:pr-4 pr-bord">
         <div className="relative aspect-[3/2] w-full" {...edPhotos("leCosyBistrot.image", [d.image], true)}>
           <Media src={d.image.src} alt={d.image.alt} sizes="(min-width: 768px) 55vw, 100vw" priority />
         </div>

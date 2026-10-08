@@ -27,7 +27,7 @@ export default async function Page() {
           ],
         })}
       />
-      <section className="grid gap-10 py-[50px] tab:grid-cols-[minmax(0,778px)_1fr] tab:gap-16 tab:pr-4 desk:pr-16">
+      <section className="grid gap-10 py-[50px] tab:grid-cols-[minmax(0,778px)_1fr] tab:gap-16 tab:max-desk:pr-4 pr-bord">
         <CarteGoogle zoom={13} className="h-[400px] tab:h-[750px]" />
         <div className="px-4 tab:px-0 tab:pt-[59px]">
           <h1 className="titre-1" {...ed("retrouvezNous.titre")}>

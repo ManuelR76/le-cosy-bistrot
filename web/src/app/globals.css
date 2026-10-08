@@ -61,6 +61,13 @@
 @utility conteneur-large {
   @apply w-full px-4 desk:px-16;
 }
+/* Sections pleine largeur (image à fond perdu d'un côté) : le texte s'aligne sur le bord du conteneur. */
+@utility pl-bord {
+  @apply desk:pl-[max(4rem,calc((100%-var(--container-site))/2))];
+}
+@utility pr-bord {
+  @apply desk:pr-[max(4rem,calc((100%-var(--container-site))/2))];
+}
 @utility titre-1 {
   @apply font-display text-[28px] leading-none font-normal tab:text-[48px];
 }

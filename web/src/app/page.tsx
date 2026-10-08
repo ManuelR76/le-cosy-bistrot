@@ -58,7 +58,7 @@ export default async function Accueil() {
 
       {/* Menus et formules */}
       <section className="bg-rouge">
-        <div className="conteneur-large grid grid-cols-[minmax(0,1fr)] gap-8 py-[50px] desk:grid-cols-[1fr_383px] desk:gap-5 desk:py-[100px]">
+        <div className="conteneur grid grid-cols-[minmax(0,1fr)] gap-8 py-[50px] desk:grid-cols-[1fr_383px] desk:gap-5 desk:py-[100px]">
           <div>
             <h2 className="titre-1" {...ed("accueil.menus.titre")}>
               {menus.titre}

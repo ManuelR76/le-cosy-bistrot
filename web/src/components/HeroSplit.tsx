@@ -26,7 +26,7 @@ export function HeroSplit({ chemin, titre, sousTitre, paragraphes, cta, fond, ha
   return (
     <section
       className={`grid min-h-[609px] tab:min-h-[max(675px,75vh)] tab:gap-5 ${
-        accueil ? "tab:grid-cols-[50%_1fr]" : "tab:grid-cols-[1fr_45.5vw] desk:pl-16"
+        accueil ? "tab:grid-cols-[50%_1fr]" : "tab:grid-cols-[1fr_45.5vw] pl-bord"
       }`}
     >
       <div className={`relative flex items-center px-6 py-16 ${accueil ? "tab:justify-center tab:px-5" : "tab:px-6"}`}>
