@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/* Polices d'origine, auto-hébergées (RGPD : aucun appel tiers côté visiteur).
+   Gimoc Botuned (titres, logo) et Congratulations DEMO (sous-titres, menu, boutons) :
+   reprises à l'identique à la demande d'Helloweb — licences à confirmer (MIGRATION-DECISIONS.md). */
+@font-face {
+  font-family: "Gimoc Botuned";
+  src: url("/fonts/Gimoc-Botuned.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Congratulations DEMO";
+  src: url("/fonts/Congratulations_DEMO.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Tokens relevés sur le kit Elementor (contexte-projet/inventaire/design.md). */
+@theme {
+  --color-rouge: #b10f2e;
+  --color-rouge-vif: #e11439;
+  --color-beige: #e3c7b5;
+  --color-noir: #111111;
+  --color-blanc: #f5f5f5;
+  --color-gris: #dbdbdb;
+
+  --font-display: "Gimoc Botuned", Georgia, serif;
+  --font-accent: "Congratulations DEMO", "Arial Narrow", sans-serif;
+  --font-sans: Arial, Helvetica, sans-serif;
+
+  --container-site: 1440px;
+  --container-article: 1140px;
+  --breakpoint-tab: 768px;
+  --breakpoint-desk: 1025px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  body {
+    @apply bg-noir text-blanc font-sans text-base leading-6 antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-beige);
+    outline-offset: 3px;
+  }
+}
+
+@utility conteneur {
+  @apply mx-auto w-full max-w-[calc(var(--container-site)+2rem)] px-4 desk:max-w-[calc(var(--container-site)+128px)] desk:px-16;
+}
+@utility conteneur-large {
+  @apply w-full px-4 desk:px-16;
+}
+/* Sections pleine largeur (image à fond perdu d'un côté) : le texte s'aligne sur le bord du conteneur. */
+@utility pl-bord {
+  @apply desk:pl-[max(4rem,calc((100%-var(--container-site))/2))];
+}
+@utility pr-bord {
+  @apply desk:pr-[max(4rem,calc((100%-var(--container-site))/2))];
+}
+@utility titre-1 {
+  @apply font-display text-[28px] leading-none font-normal tab:text-[48px];
+}
+@utility titre-2 {
+  @apply font-accent text-[25px] leading-none font-normal tab:text-[35px];
+}
+@utility btn {
+  @apply inline-block bg-rouge px-6 py-3 font-accent text-[22px] leading-[22px] font-semibold text-blanc transition-colors hover:bg-rouge-vif;
+}
+@utility btn-clair {
+  @apply bg-blanc text-rouge hover:bg-beige hover:text-rouge;
+}
+
+@layer components {
+  .prose-cosy h1 {
+    @apply titre-1 mb-4 text-rouge-vif;
+  }
+  .prose-cosy h2 {
+    @apply titre-2 mt-2 mb-4 text-beige;
+  }
+  .prose-cosy h3 {
+    @apply font-accent mt-5 mb-3 text-[25px] leading-none text-beige;
+  }
+  .prose-cosy p {
+    @apply mb-[14.4px];
+  }
+  .prose-cosy a {
+    @apply text-beige underline underline-offset-2 hover:text-blanc;
+  }
+  .prose-cosy ul {
+    @apply mb-4 list-disc pl-6;
+  }
+  .prose-cosy li {
+    @apply mb-1;
+  }
+}

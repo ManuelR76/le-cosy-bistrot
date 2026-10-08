@@ -1,0 +1,3 @@
+module.exports=[3363,a=>{"use strict";var b=a.i(7997),c=a.i(95936);a.s(["default",0,function(){return(0,b.jsxs)("section",{className:"conteneur py-[100px] text-center",children:[(0,b.jsx)("h1",{className:"titre-1",children:"Page introuvable"}),(0,b.jsx)("p",{className:"mt-5",children:"La page demandée n’existe pas ou a été déplacée."}),(0,b.jsx)(c.default,{href:"/",className:"btn mt-8",children:"Retour à l’accueil"})]})}])},17537,function(a){a.n(a.i(3363))}];
+
+//# sourceMappingURL=src_app_not-found_tsx_1863-sqmkh7ny._.js.map

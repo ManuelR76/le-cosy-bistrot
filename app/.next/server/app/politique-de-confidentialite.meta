@@ -1,0 +1,35 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/politique-de-confidentialite/layout,_N_T_/politique-de-confidentialite/page,_N_T_/politique-de-confidentialite"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/_index",
+    "/politique-de-confidentialite/__PAGE__"
+  ],
+  "prefetchHints": {
+    "hints": 0,
+    "slots": {
+      "children": {
+        "hints": 64,
+        "slots": {
+          "children": {
+            "hints": 160,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/7bbfeec28a05bc60767981ec4a288c5ef30526d28f9e184c9cddf6007c5800dc/$/politique-de-confidentialite",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/politique-de-confidentialite/page"
+    },
+    "isFallback": false
+  }
+}

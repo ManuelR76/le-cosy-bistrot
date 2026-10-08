@@ -1,0 +1,35 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/privatisation/layout,_N_T_/privatisation/page,_N_T_/privatisation"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/_index",
+    "/privatisation/__PAGE__"
+  ],
+  "prefetchHints": {
+    "hints": 0,
+    "slots": {
+      "children": {
+        "hints": 64,
+        "slots": {
+          "children": {
+            "hints": 160,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/c3ccc63c63f4ddfc2134b77c96486cb5d441a499df6b72a4d5325f2cccf2f8af/$/privatisation",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/privatisation/page"
+    },
+    "isFallback": false
+  }
+}

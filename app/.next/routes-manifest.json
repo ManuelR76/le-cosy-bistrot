@@ -1,0 +1,624 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:file((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/]+\\.\\w+)/",
+      "destination": "/:file",
+      "internal": true,
+      "priority": true,
+      "missing": [
+        {
+          "type": "header",
+          "key": "x-nextjs-data"
+        }
+      ],
+      "statusCode": 308,
+      "regex": "^(?:/((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/]+\\.\\w+))/$"
+    },
+    {
+      "source": "/:notfile((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/\\.]+)",
+      "destination": "/:notfile/",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/\\.]+))$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "803"
+        }
+      ],
+      "destination": "/menu-cosy-ou-menu-express-pour-tous-les-gouts-au-cosy-bistrot/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "799"
+        }
+      ],
+      "destination": "/bienvenue-chez-le-cosy-un-bistrot-convivial-a-bourg-achard/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "795"
+        }
+      ],
+      "destination": "/votre-evenement-special-au-cosy-bistrot-dans-un-cadre-chaleureux-et-convivial/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "791"
+        }
+      ],
+      "destination": "/vivez-des-soirees-inoubliables-au-son-de-nos-concerts-et-spectacles-en-live/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "787"
+        }
+      ],
+      "destination": "/des-soirees-a-theme-inoubliables-au-cosy-bistrot/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "783"
+        }
+      ],
+      "destination": "/plongez-dans-lambiance-animee-de-nos-soirees-evenements-au-cosy-bistrot/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "779"
+        }
+      ],
+      "destination": "/organisation-devenements-ambiance-et-convivialite-au-cosy-bistrot/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "775"
+        }
+      ],
+      "destination": "/privatisation-pour-mariages-et-anniversaires-celebrez-au-cosy-bistrot/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "771"
+        }
+      ],
+      "destination": "/salle-privatisee-faites-de-votre-evenement-un-moment-inoubliable-au-cosy-bistrot/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "767"
+        }
+      ],
+      "destination": "/les-delices-au-menu-du-cosy-bistrot-des-plats-allechants-pour-toutes-les-envies/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "763"
+        }
+      ],
+      "destination": "/restaurant-le-cosy-bistrot-votre-pause-gourmande-quotidienne-a-bourg-achard/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "757"
+        }
+      ],
+      "destination": "/le-cosy-bistrot-votre-destination-culinaire-a-bourg-achard/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "page_id",
+          "value": "19"
+        }
+      ],
+      "destination": "/retrouvez-nous/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "19"
+        }
+      ],
+      "destination": "/retrouvez-nous/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "page_id",
+          "value": "11"
+        }
+      ],
+      "destination": "/articles/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "11"
+        }
+      ],
+      "destination": "/articles/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "page_id",
+          "value": "10"
+        }
+      ],
+      "destination": "/privatisation/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "10"
+        }
+      ],
+      "destination": "/privatisation/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "page_id",
+          "value": "9"
+        }
+      ],
+      "destination": "/evenement/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "9"
+        }
+      ],
+      "destination": "/evenement/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "page_id",
+          "value": "8"
+        }
+      ],
+      "destination": "/le-cosy-bistrot/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "8"
+        }
+      ],
+      "destination": "/le-cosy-bistrot/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "page_id",
+          "value": "7"
+        }
+      ],
+      "destination": "/mentions-legales/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "7"
+        }
+      ],
+      "destination": "/mentions-legales/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "page_id",
+          "value": "3"
+        }
+      ],
+      "destination": "/politique-de-confidentialite/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "3"
+        }
+      ],
+      "destination": "/politique-de-confidentialite/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/category/:path*",
+      "destination": "/articles/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/category(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/tag/:path*",
+      "destination": "/articles/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/tag(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/author/:path*",
+      "destination": "/articles/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/author(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/feed",
+      "destination": "/articles/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/feed(?:/)?$"
+    },
+    {
+      "source": "/comments/feed",
+      "destination": "/articles/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/comments/feed(?:/)?$"
+    },
+    {
+      "source": "/:slug/feed",
+      "destination": "/:slug/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)(?:/([^/]+?))/feed(?:/)?$"
+    },
+    {
+      "source": "/articles/page/:n",
+      "destination": "/articles/",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/articles/page(?:/([^/]+?))(?:/)?$"
+    },
+    {
+      "source": "/sitemap_index.xml",
+      "destination": "/sitemap.xml",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/sitemap_index\\.xml(?:/)?$"
+    },
+    {
+      "source": "/wp-sitemap.xml",
+      "destination": "/sitemap.xml",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/wp-sitemap\\.xml(?:/)?$"
+    },
+    {
+      "source": "/:type(post|page|category|post_tag)-sitemap.xml",
+      "destination": "/sitemap.xml",
+      "statusCode": 301,
+      "regex": "^(?!/_next)(?:/(post|page|category|post_tag))-sitemap\\.xml(?:/)?$"
+    },
+    {
+      "source": "/sitemap.rss",
+      "destination": "/sitemap.xml",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/sitemap\\.rss(?:/)?$"
+    },
+    {
+      "source": "/wp-content/uploads/:path*",
+      "destination": "https://admin.lecosybistrot27.fr/wp-content/uploads/:path*",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/wp-content/uploads(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/wp-admin/:path*",
+      "destination": "https://admin.lecosybistrot27.fr/wp-admin/:path*",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/wp-admin(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/wp-login.php",
+      "destination": "https://admin.lecosybistrot27.fr/wp-login.php",
+      "statusCode": 301,
+      "regex": "^(?!/_next)/wp-login\\.php(?:/)?$"
+    }
+  ],
+  "headers": [],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/medias/[nom]",
+      "regex": "^/medias/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPnom": "nxtPnom"
+      },
+      "namedRegex": "^/medias/(?<nxtPnom>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/[slug]",
+      "regex": "^/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/(?<nxtPslug>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/edition",
+      "regex": "^/api/edition(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/edition(?:/)?$"
+    },
+    {
+      "page": "/api/edition/actualites",
+      "regex": "^/api/edition/actualites(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/edition/actualites(?:/)?$"
+    },
+    {
+      "page": "/api/edition/actualites/rediger",
+      "regex": "^/api/edition/actualites/rediger(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/edition/actualites/rediger(?:/)?$"
+    },
+    {
+      "page": "/api/edition/assistant",
+      "regex": "^/api/edition/assistant(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/edition/assistant(?:/)?$"
+    },
+    {
+      "page": "/api/edition/etat",
+      "regex": "^/api/edition/etat(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/edition/etat(?:/)?$"
+    },
+    {
+      "page": "/api/edition/photo",
+      "regex": "^/api/edition/photo(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/edition/photo(?:/)?$"
+    },
+    {
+      "page": "/api/edition/restaurer",
+      "regex": "^/api/edition/restaurer(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/edition/restaurer(?:/)?$"
+    },
+    {
+      "page": "/articles",
+      "regex": "^/articles(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/articles(?:/)?$"
+    },
+    {
+      "page": "/connexion",
+      "regex": "^/connexion(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/connexion(?:/)?$"
+    },
+    {
+      "page": "/connexion/sortie",
+      "regex": "^/connexion/sortie(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/connexion/sortie(?:/)?$"
+    },
+    {
+      "page": "/evenement",
+      "regex": "^/evenement(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/evenement(?:/)?$"
+    },
+    {
+      "page": "/le-cosy-bistrot",
+      "regex": "^/le\\-cosy\\-bistrot(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/le\\-cosy\\-bistrot(?:/)?$"
+    },
+    {
+      "page": "/mentions-legales",
+      "regex": "^/mentions\\-legales(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mentions\\-legales(?:/)?$"
+    },
+    {
+      "page": "/politique-de-confidentialite",
+      "regex": "^/politique\\-de\\-confidentialite(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/politique\\-de\\-confidentialite(?:/)?$"
+    },
+    {
+      "page": "/privatisation",
+      "regex": "^/privatisation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privatisation(?:/)?$"
+    },
+    {
+      "page": "/retrouvez-nous",
+      "regex": "^/retrouvez\\-nous(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/retrouvez\\-nous(?:/)?$"
+    },
+    {
+      "page": "/robots.txt",
+      "regex": "^/robots\\.txt(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/robots\\.txt(?:/)?$"
+    },
+    {
+      "page": "/sitemap.xml",
+      "regex": "^/sitemap\\.xml(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sitemap\\.xml(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}
