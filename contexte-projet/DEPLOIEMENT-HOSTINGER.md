@@ -2,7 +2,13 @@
 
 Rien n'est mis en ligne sans feu vert. Le DNS n'est pas touché tant que la bascule n'est pas décidée (décision 10).
 
-## Build
+## Build (08/10/2026 : compilation sur GitHub, pas sur Hostinger)
+- L'hébergement mutualisé a une glibc trop ancienne (GLIBC_2.29 absente) : SWC natif ne charge pas, `next build` échoue.
+- `.github/workflows/hostinger.yml` compile à chaque push sur `main` et pousse le résultat sur la branche **`hostinger`** (dossier `app/` = standalone, `package.json` racine sans dépendance).
+- Web app Hostinger : dépôt ManuelR76/le-cosy-bistrot, branche `hostinger`, dossier racine `/`, build `npm run build` (no-op), démarrage `npm start` (`node app/server.js`).
+- Les variables NEXT_PUBLIC_* sont figées au build (dans le workflow) ; les autres (EDITION_*, CONTENU_DIR, ANTHROPIC_API_KEY) se règlent dans hPanel.
+
+### Ancienne procédure (VPS / Node récent)
 - Node 24, depuis `web/` : `npm ci && npm run build:hostinger`
 - Démarrage : `npm run start:hostinger` (= `node .next/standalone/server.js`), PORT/HOSTNAME fournis par Hostinger.
 - `scripts/standalone.mjs` copie `public/` et `.next/static/` dans le dossier standalone (sinon polices et JS en 404).

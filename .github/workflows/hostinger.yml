@@ -1,0 +1,52 @@
+# Hostinger (hébergement mutualisé) a une glibc trop ancienne pour compiler Next.js (SWC natif).
+# On compile ici et on pousse le résultat prêt à démarrer sur la branche `hostinger`,
+# que la web app Node Hostinger déploie (aucune compilation côté Hostinger).
+name: Build Hostinger
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: hostinger
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run build:hostinger
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ vars.HOSTINGER_SITE_URL || 'https://preprod.lecosybistrot27.fr' }}
+          NEXT_PUBLIC_NOINDEX: ${{ vars.HOSTINGER_NOINDEX || '1' }}
+          NEXT_PUBLIC_WP_MEDIA_URL: https://lecosybistrot27.fr
+          NEXT_PUBLIC_WORDPRESS_API_URL: https://lecosybistrot27.fr/?graphql
+      - name: Préparer le paquet
+        run: |
+          rm -rf /tmp/out && mkdir -p /tmp/out/app
+          # Dans app/ : le `npm install` lancé par Hostinger à la racine ne doit pas élaguer node_modules.
+          cp -a .next/standalone/. /tmp/out/app/
+          cat > /tmp/out/package.json <<'J'
+          {
+            "name": "le-cosy-bistrot-hostinger",
+            "private": true,
+            "scripts": { "build": "echo deja compile", "start": "node app/server.js" },
+            "dependencies": {}
+          }
+          J
+          printf 'app/node_modules/.cache\n' > /tmp/out/.gitignore
+      - name: Pousser sur la branche hostinger
+        run: |
+          cd /tmp/out
+          git init -q -b hostinger
+          git add -A -f
+          git -c user.name="github-actions" -c user.email="actions@github.com" commit -qm "Build ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" hostinger
