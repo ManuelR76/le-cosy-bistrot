@@ -3,7 +3,7 @@ import path from "node:path";
 import { markdownToHtml, parseMarkdown, stripTags } from "./markdown";
 import { lireActualites, lireEdits, type Actualite } from "./edition/store";
 import { blocsModifiables, cleDe } from "./edition/blocs";
-import { wpPage, wpPosts } from "./wordpress";
+import { nettoyerContenu, wpPosts } from "./wordpress";
 
 const CONTENT = path.join(process.cwd(), "src/content");
 
@@ -78,13 +78,15 @@ export function actualiteVersArticle(a: Actualite): Article {
 /** Articles triés du plus récent au plus ancien (ordre WordPress). */
 export async function getArticles(): Promise<Article[]> {
   const wp = await wpPosts();
+  // Balises title/description : celles relevées dans l'inventaire (AIOSEO) priment, WPGraphQL ne les expose pas.
+  const statiques = wp ? new Map((await articlesStatiques()).map((a) => [a.slug, a])) : null;
   const list: Article[] = wp
     ? wp.map((p) => ({
         slug: p.slug,
         h1: p.title,
-        title: p.seo?.title || `${p.title} - Le Cosy Bistrot`,
-        description: p.seo?.description || stripTags(p.excerpt),
-        html: p.content,
+        title: statiques?.get(p.slug)?.title || `${p.title} - Le Cosy Bistrot`,
+        description: statiques?.get(p.slug)?.description || stripTags(p.excerpt),
+        html: nettoyerContenu(p.content, p.featuredImage?.node.sourceUrl),
         extrait: extrait(p.excerpt || p.content),
         published: p.date,
         modified: p.modified,
@@ -120,8 +122,9 @@ export async function getPageLegale(slug: "mentions-legales" | "politique-de-con
     html: markdownToHtml(body.replace(/^# .+$/m, "")),
     modified: data.modified,
   };
-  const wp = await wpPage(`/${slug}/`);
-  const p = wp ? { ...statique, h1: wp.title, html: wp.content, modified: wp.modified } : statique;
+  // Les pages légales WordPress sont construites avec Elementor : on garde la version de l'inventaire,
+  // modifiable sur la page (décision 29), plutôt que d'injecter le balisage Elementor.
+  const p = statique;
   const edits = await lireEdits();
   const edition = `legal.${cleDe(slug)}`;
   return { ...p, h1: edits[`${edition}.titre`] ?? p.h1, html: blocsModifiables(p.html, edition, edits), edition };

@@ -33,19 +33,28 @@ export type WpPost = {
   modified: string;
   featuredImage: { node: { sourceUrl: string; altText: string } } | null;
   categories: { nodes: { name: string }[] };
-  seo: { title: string | null; description: string | null } | null;
 };
 
 const POST_FIELDS = `slug title content excerpt date modified
   featuredImage { node { sourceUrl altText } }
-  categories { nodes { name } }
-  seo { title description }`;
+  categories { nodes { name } }`;
 
 export async function wpPosts(): Promise<WpPost[] | null> {
   const d = await gql<{ posts: { nodes: WpPost[] } }>(
     `query { posts(first: 100, where: { status: PUBLISH }) { nodes { ${POST_FIELDS} } } }`,
   );
   return d?.posts.nodes ?? null;
+}
+
+/**
+ * Nettoie le HTML d'un article WordPress : retire l'image à la une répétée en tête du contenu
+ * (le gabarit l'affiche déjà) et les résidus « Top of Form / Bottom of Form » (décision 21).
+ */
+export function nettoyerContenu(html: string, imageUne?: string | null): string {
+  let h = html.replace(/<p\b[^>]*>\s*(Top|Bottom) of Form\s*<\/p>/gi, "");
+  const fig = h.match(/^\s*<figure\b[\s\S]*?<\/figure>/);
+  if (fig && imageUne) h = h.slice(fig[0].length);
+  return h.trim();
 }
 
 export async function wpPage(uri: string): Promise<{ title: string; content: string; modified: string } | null> {
