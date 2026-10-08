@@ -25,10 +25,10 @@ jobs:
       - run: npm ci
       - run: npm run build:hostinger
         env:
-          NEXT_PUBLIC_SITE_URL: ${{ vars.HOSTINGER_SITE_URL || 'https://preprod.lecosybistrot27.fr' }}
-          NEXT_PUBLIC_NOINDEX: ${{ vars.HOSTINGER_NOINDEX || '1' }}
-          NEXT_PUBLIC_WP_MEDIA_URL: https://lecosybistrot27.fr
-          NEXT_PUBLIC_WORDPRESS_API_URL: https://lecosybistrot27.fr/?graphql
+          NEXT_PUBLIC_SITE_URL: ${{ vars.HOSTINGER_SITE_URL || 'https://lecosybistrot27.fr' }}
+          NEXT_PUBLIC_NOINDEX: ${{ vars.HOSTINGER_NOINDEX || '0' }}
+          NEXT_PUBLIC_WP_MEDIA_URL: https://admin.lecosybistrot27.fr
+          NEXT_PUBLIC_WORDPRESS_API_URL: https://admin.lecosybistrot27.fr/?graphql
       - name: Préparer le paquet
         run: |
           rm -rf /tmp/out && mkdir -p /tmp/out/app
