@@ -176,10 +176,10 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
   const nbParagraphes = b.texte.split(/\n\s*\n/).filter((p) => p.trim()).length;
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="actu-titre-fenetre" className="fixed inset-0 z-[80] flex items-center justify-center bg-black/75 p-2 tab:p-6">
-      <div className="flex max-h-[96vh] w-full max-w-[760px] flex-col overflow-hidden border-2 border-beige bg-noir text-[15px]">
+    <div role="dialog" aria-modal="true" aria-labelledby="actu-titre-fenetre" className="ui-edition fixed inset-0 z-[80] flex items-center justify-center bg-black/75 p-2 tab:p-6">
+      <div className="flex max-h-[96vh] w-full max-w-[760px] flex-col overflow-hidden rounded-2xl bg-[#161618] text-[15px] ring-1 ring-white/10">
         <header className="flex items-center justify-between border-b border-beige/30 px-5 py-4">
-          <p id="actu-titre-fenetre" className="font-accent text-[28px] leading-none">
+          <p id="actu-titre-fenetre" className="text-[20px] font-semibold">
             {initial.id ? "Modifier l'actualité" : "Nouvelle actualité"}
           </p>
           <button type="button" onClick={onFermer} disabled={!!occupe} className="text-gris underline hover:text-blanc">
@@ -282,7 +282,7 @@ export function BoutonAjoutActualite() {
   );
   if (!visible) return null;
   return (
-    <button type="button" className="btn mb-8 text-[20px]" onClick={() => window.dispatchEvent(new CustomEvent(EVT_NOUVELLE_ACTU))}>
+    <button type="button" className="ui-edition btn mb-8 text-[20px]" onClick={() => window.dispatchEvent(new CustomEvent(EVT_NOUVELLE_ACTU))}>
       + Ajouter une actualité
     </button>
   );

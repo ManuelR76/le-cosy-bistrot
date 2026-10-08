@@ -37,7 +37,7 @@ export function Editeur() {
   const [panneauPhotos, setPanneauPhotos] = useState<Groupe | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [envoi, setEnvoi] = useState(false);
-  const [ouvert, setOuvert] = useState(true);
+  const [ouvert, setOuvert] = useState(false);
   const [onglet, setOnglet] = useState<Onglet>("assistant");
   const [seo, setSeo] = useState<{ chemin: string; title: string; description: string } | null>(null);
   const [assistantActif, setAssistantActif] = useState(true);
@@ -205,6 +205,11 @@ export function Editeur() {
         .mode-edition [data-edit]{outline:1px dashed rgba(227,199,181,.6);outline-offset:3px;cursor:text}
         .mode-edition [data-edit]:hover,.mode-edition [data-edit]:focus{outline:2px solid #e3c7b5}
         .mode-edition [data-edit-photos]{outline:2px dashed rgba(227,199,181,.5);outline-offset:-6px}
+        .ui-edition,.ui-edition *{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif!important;letter-spacing:normal;text-transform:none}
+        .ui-edition .btn{font-size:14px!important;line-height:1.2!important;font-weight:600!important;border-radius:10px;padding:.55rem .9rem}
+        .ui-edition ::-webkit-scrollbar{width:8px}.ui-edition ::-webkit-scrollbar-thumb{background:#3a3a3d;border-radius:8px}
+        @keyframes edition-entree{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+        @media (prefers-reduced-motion:no-preference){.ui-edition-panneau{animation:edition-entree .18s ease-out}}
         .mode-edition .edition-propose{outline:3px solid #e11439!important;background:rgba(225,20,57,.25);transition:background .6s}
       `}</style>
 
@@ -217,34 +222,60 @@ export function Editeur() {
         <button
           type="button"
           onClick={() => setOuvert(true)}
-          className="btn fixed right-4 bottom-4 z-[60] shadow-2xl"
-          aria-label="Ouvrir le panneau d'édition"
+          className="ui-edition fixed right-5 bottom-5 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-rouge text-blanc shadow-[0_8px_30px_rgba(0,0,0,.45)] ring-1 ring-white/10 transition hover:scale-105 hover:bg-rouge-vif focus-visible:outline-2"
+          aria-label={`Ouvrir l'assistant d'édition${n ? ` (${n} modification${n > 1 ? "s" : ""} en attente)` : ""}`}
         >
-          Édition{n ? ` (${n})` : ""}
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z" />
+            <path d="M9 12h.01M12 12h.01M15 12h.01" />
+          </svg>
+          {!!n && (
+            <span className="absolute -top-1 -right-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-beige px-1.5 text-xs font-semibold text-noir">{n}</span>
+          )}
         </button>
       ) : (
         <aside
-          aria-label="Panneau d'édition"
-          className="fixed inset-x-2 bottom-2 z-[60] flex max-h-[75vh] flex-col border-2 border-beige bg-noir text-[15px] shadow-[0_10px_40px_rgba(0,0,0,.6)] tab:inset-x-auto tab:right-4 tab:bottom-4 tab:w-[400px]"
+          aria-label="Assistant d'édition"
+          className="ui-edition ui-edition-panneau fixed inset-x-3 bottom-3 z-[60] flex max-h-[80vh] flex-col overflow-hidden rounded-2xl bg-[#161618] text-[14.5px] leading-relaxed text-[#ececec] shadow-[0_20px_60px_rgba(0,0,0,.55)] ring-1 ring-white/10 tab:inset-x-auto tab:right-5 tab:bottom-5 tab:w-[420px]"
         >
-          <header className="flex items-center justify-between gap-2 border-b border-beige/30 px-4 py-3">
-            <div>
-              <p className="font-accent text-[24px] leading-none">Mode édition</p>
-              <p className="mt-1 text-xs text-gris">
-                {n ? `${n} modification${n > 1 ? "s" : ""} non enregistrée${n > 1 ? "s" : ""}` : "Aucune modification en attente"}
-              </p>
+          <header className="flex items-center justify-between gap-3 px-5 pt-4 pb-3">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-rouge/90" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                </svg>
+              </span>
+              <div>
+                <p className="text-[15px] font-semibold text-white">Édition du site</p>
+                <p className="text-xs text-[#9a9a9f]">
+                  {n ? `${n} modification${n > 1 ? "s" : ""} non enregistrée${n > 1 ? "s" : ""}` : "Tout est enregistré"}
+                </p>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <button type="button" onClick={enregistrer} disabled={!n || envoi} className="btn px-3 py-2 text-[16px] disabled:opacity-40">
-                {envoi ? "…" : "Enregistrer"}
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={enregistrer}
+                disabled={!n || envoi}
+                className="rounded-full bg-rouge px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-rouge-vif disabled:bg-white/10 disabled:text-[#77777c]"
+              >
+                {envoi ? "Envoi…" : "Enregistrer"}
               </button>
-              <button type="button" onClick={() => setOuvert(false)} aria-label="Réduire le panneau" className="px-2 text-xl text-gris hover:text-blanc">
-                –
+              <button
+                type="button"
+                onClick={() => setOuvert(false)}
+                aria-label="Réduire l'assistant"
+                className="flex h-9 w-9 items-center justify-center rounded-full text-[#9a9a9f] transition hover:bg-white/10 hover:text-white"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
               </button>
             </div>
           </header>
-          {message && <p className="border-b border-beige/30 bg-[#1b1b1b] px-4 py-2 text-beige">{message}</p>}
-          <nav className="flex border-b border-beige/30 text-sm" aria-label="Onglets du panneau">
+          {message && <p className="mx-5 mb-2 rounded-lg bg-beige/10 px-3 py-2 text-[13px] text-beige">{message}</p>}
+          <nav className="mx-4 mb-1 flex gap-0.5 rounded-xl bg-white/5 p-1 text-[12.5px]" aria-label="Onglets de l'assistant">
             {(
               [
                 ["assistant", "Assistant"],
@@ -260,13 +291,13 @@ export function Editeur() {
                 type="button"
                 onClick={() => setOnglet(id)}
                 aria-pressed={onglet === id}
-                className={`flex-1 px-1 py-2 ${onglet === id ? "bg-rouge text-blanc" : "text-gris hover:text-blanc"}`}
+                className={`flex-auto rounded-lg px-1.5 py-1.5 whitespace-nowrap transition ${onglet === id ? "bg-white/15 font-semibold text-white" : "text-[#9a9a9f] hover:text-white"}`}
               >
                 {label}
               </button>
             ))}
           </nav>
-          <div className="min-h-[220px] overflow-y-auto">
+          <div className="min-h-[240px] overflow-y-auto">
             {onglet === "assistant" &&
               (assistantActif ? (
                 <Assistant onAppliquer={appliquer} />
@@ -281,9 +312,9 @@ export function Editeur() {
             {onglet === "historique" && <Historique />}
             {onglet === "aide" && <Aide />}
           </div>
-          <footer className="flex justify-end border-t border-beige/30 px-4 py-2">
+          <footer className="flex justify-end border-t border-white/5 px-5 py-2.5">
             <form action="/connexion/sortie/" method="post">
-              <button type="submit" className="text-sm text-gris underline hover:text-blanc">
+              <button type="submit" className="text-xs text-[#8a8a8f] transition hover:text-white">
                 Quitter le mode édition
               </button>
             </form>
@@ -341,9 +372,9 @@ function Assistant({ onAppliquer }: { onAppliquer: (p: { chemin: string; valeur:
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex flex-col gap-3 p-4" aria-live="polite">
+      <div className="flex flex-col gap-3 px-5 py-4" aria-live="polite">
         {fil.map((b, i) => (
-          <div key={i} className={`max-w-[90%] px-3 py-2 ${b.role === "user" ? "self-end bg-rouge" : "self-start bg-[#1f1f1f]"}`}>
+          <div key={i} className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${b.role === "user" ? "self-end rounded-br-md bg-rouge text-white" : "self-start rounded-bl-md bg-white/[.06]"}`}>
             <p className="whitespace-pre-line">{b.content}</p>
             {!!b.nb && (
               <p className="mt-1 text-xs text-beige">
@@ -352,11 +383,16 @@ function Assistant({ onAppliquer }: { onAppliquer: (p: { chemin: string; valeur:
             )}
           </div>
         ))}
-        {attente && <p className="self-start text-gris">L&apos;assistant prépare les changements…</p>}
+        {attente && (
+          <p className="flex items-center gap-2 self-start rounded-2xl rounded-bl-md bg-white/[.06] px-4 py-2.5 text-[#9a9a9f]">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-beige" aria-hidden="true" />
+            Je prépare les changements…
+          </p>
+        )}
         <div ref={bas} />
       </div>
       <form
-        className="sticky bottom-0 flex gap-2 border-t border-beige/30 bg-noir p-3"
+        className="sticky bottom-0 flex items-end gap-2 border-t border-white/5 bg-[#161618] px-4 py-3"
         onSubmit={(e) => {
           e.preventDefault();
           envoyer();
@@ -377,10 +413,17 @@ function Assistant({ onAppliquer }: { onAppliquer: (p: { chemin: string; valeur:
             }
           }}
           placeholder="Ex. : change le prix de la formule express à 19,50 €"
-          className="flex-1 resize-none border border-gris/40 bg-[#1b1b1b] px-3 py-2 text-blanc placeholder:text-gris/60"
+          className="flex-1 resize-none rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-white placeholder:text-[#77777c] focus:border-beige/60 focus:outline-none"
         />
-        <button type="submit" disabled={attente || !saisie.trim()} className="btn self-end px-3 py-2 text-[16px] disabled:opacity-40">
-          Envoyer
+        <button
+          type="submit"
+          disabled={attente || !saisie.trim()}
+          aria-label="Envoyer"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-rouge text-white transition hover:bg-rouge-vif disabled:bg-white/10 disabled:text-[#77777c]"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
         </button>
       </form>
     </div>
@@ -555,10 +598,10 @@ function Aide() {
 /* ---------- Photos ---------- */
 function PanneauPhotos({ groupe, onFermer, onChanger }: { groupe: Groupe; onFermer: () => void; onChanger: (g: Groupe, i: number, f: File) => void }) {
   return (
-    <div role="dialog" aria-modal="true" aria-label="Changer les photos" className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4">
-      <div className="max-h-[90vh] w-full max-w-[720px] overflow-auto bg-noir p-6 shadow-2xl">
+    <div role="dialog" aria-modal="true" aria-label="Changer les photos" className="ui-edition fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4">
+      <div className="max-h-[90vh] w-full max-w-[720px] overflow-auto rounded-2xl bg-[#161618] p-6 shadow-2xl ring-1 ring-white/10">
         <div className="mb-4 flex items-center justify-between">
-          <p className="font-accent text-[28px]">Changer les photos</p>
+          <p className="text-[20px] font-semibold">Changer les photos</p>
           <button type="button" onClick={onFermer} className="btn btn-clair text-[18px]">
             Fermer
           </button>
@@ -601,7 +644,7 @@ function BoutonPhotos({ groupe, onOuvrir }: { groupe: Groupe; onOuvrir: () => vo
   }, [groupe.el]);
   if (!pos) return null;
   return (
-    <button type="button" onClick={onOuvrir} style={{ position: "absolute", ...pos }} className="btn z-[55] text-[16px] shadow-lg">
+    <button type="button" onClick={onOuvrir} style={{ position: "absolute", ...pos }} className="ui-edition btn z-[55] text-[16px] shadow-lg">
       Changer {groupe.srcs.length > 1 ? `les ${groupe.srcs.length} photos` : "la photo"}
     </button>
   );
