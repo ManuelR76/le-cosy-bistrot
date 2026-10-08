@@ -14,7 +14,7 @@ type Groupe = { chemin: string; srcs: string[]; el: HTMLElement; unique: boolean
 type Mod = { avant: string; apres: string; libelle: string };
 type Bulle = { role: "user" | "assistant"; content: string; nb?: number };
 type Version = { id: string; date: string };
-type Onglet = "assistant" | "modifs" | "actus" | "google" | "historique" | "aide";
+type Onglet = "assistant" | "modifs" | "actus" | "historique" | "aide";
 
 const lireCookie = (nom: string) => document.cookie.split("; ").some((c) => c === `${nom}=1`);
 const champs = (chemin: string) => Array.from(document.querySelectorAll<HTMLElement>(`[data-edit="${CSS.escape(chemin)}"]`));
@@ -39,7 +39,6 @@ export function Editeur() {
   const [envoi, setEnvoi] = useState(false);
   const [ouvert, setOuvert] = useState(false);
   const [onglet, setOnglet] = useState<Onglet>("assistant");
-  const [seo, setSeo] = useState<{ chemin: string; title: string; description: string } | null>(null);
   const [assistantActif, setAssistantActif] = useState(true);
   const [demandeActu, setDemandeActu] = useState(0);
   const modsRef = useRef(mods);
@@ -100,7 +99,6 @@ export function Editeur() {
       el.closest("a")?.addEventListener("click", bloquerLien);
       el.querySelectorAll("a").forEach((a) => a.addEventListener("click", bloquerLien));
     }
-    const seoEl = document.querySelector<HTMLElement>("[data-seo]");
     const raf = window.setTimeout(() => {
       setGroupes(
         Array.from(document.querySelectorAll<HTMLElement>("[data-edit-photos]")).map((el) => ({
@@ -110,7 +108,6 @@ export function Editeur() {
           unique: el.dataset.photoUnique === "1",
         })),
       );
-      if (seoEl) setSeo({ chemin: seoEl.dataset.seo!, title: seoEl.dataset.title ?? "", description: seoEl.dataset.description ?? "" });
     });
     const quitter = (e: BeforeUnloadEvent) => {
       if (Object.keys(modsRef.current).length) e.preventDefault();
@@ -279,9 +276,8 @@ export function Editeur() {
             {(
               [
                 ["assistant", "Assistant"],
-                ["modifs", `Modifs${n ? ` (${n})` : ""}`],
-                ["actus", "Actus"],
-                ["google", "Google"],
+                ["actus", "Actualités"],
+                ...(n ? ([["modifs", `En attente (${n})`]] as [Onglet, string][]) : []),
                 ["historique", "Historique"],
                 ["aide", "Aide"],
               ] as [Onglet, string][]
@@ -308,7 +304,6 @@ export function Editeur() {
               ))}
             {onglet === "actus" && <OngletActualites key={demandeActu} assistant={assistantActif} ouvrirDirect={demandeActu > 0} onFormFerme={() => setDemandeActu(0)} />}
             {onglet === "modifs" && <Modifs mods={mods} onAnnuler={annuler} />}
-            {onglet === "google" && <Google seo={seo} mods={mods} onChanger={noter} />}
             {onglet === "historique" && <Historique />}
             {onglet === "aide" && <Aide />}
           </div>
@@ -331,7 +326,7 @@ function Assistant({ onAppliquer }: { onAppliquer: (p: { chemin: string; valeur:
     {
       role: "assistant",
       content:
-        "Bonjour ! Dites-moi ce que vous voulez changer sur cette page, par exemple : « passe la formule du samedi à 24,90 € » ou « ajoute que nous sommes fermés le 24 décembre au texte des horaires ».",
+        "Bonjour ! Je peux changer vos horaires, vos prix, votre téléphone ou votre adresse. Par exemple : « passe la formule du samedi à 24,90 € » ou « on est fermés le 24 décembre ».",
     },
   ]);
   const [saisie, setSaisie] = useState("");
@@ -463,51 +458,6 @@ function Modifs({ mods, onAnnuler }: { mods: Record<string, Mod>; onAnnuler: (c:
   );
 }
 
-/* ---------- Onglet Google (titre et description de la page) ---------- */
-function Google({
-  seo,
-  mods,
-  onChanger,
-}: {
-  seo: { chemin: string; title: string; description: string } | null;
-  mods: Record<string, Mod>;
-  onChanger: (chemin: string, apres: string, avant: string, libelle: string) => void;
-}) {
-  if (!seo) return <p className="p-4 text-gris">Cette page n&apos;a pas de réglages Google modifiables.</p>;
-  const t = mods[`${seo.chemin}.title`]?.apres ?? seo.title;
-  const d = mods[`${seo.chemin}.description`]?.apres ?? seo.description;
-  return (
-    <div className="flex flex-col gap-4 p-4">
-      <p className="text-gris">Ce que Google affiche dans ses résultats pour cette page.</p>
-      <label className="flex flex-col gap-1">
-        <span className="flex justify-between">
-          Titre <span className={t.length > 60 ? "text-beige" : "text-gris"}>{t.length}/60</span>
-        </span>
-        <input
-          value={t}
-          onChange={(e) => onChanger(`${seo.chemin}.title`, e.target.value, seo.title, "Google — titre")}
-          className="border border-gris/40 bg-[#1b1b1b] px-3 py-2"
-        />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span className="flex justify-between">
-          Description <span className={d.length > 155 ? "text-beige" : "text-gris"}>{d.length}/155</span>
-        </span>
-        <textarea
-          rows={5}
-          value={d}
-          onChange={(e) => onChanger(`${seo.chemin}.description`, e.target.value, seo.description, "Google — description")}
-          className="resize-none border border-gris/40 bg-[#1b1b1b] px-3 py-2"
-        />
-      </label>
-      <div className="bg-white p-3 font-sans text-[#202124]">
-        <p className="text-[18px] leading-tight text-[#1a0dab]">{court(t, 62)}</p>
-        <p className="mt-1 text-[13px] text-[#4d5156]">{court(d, 158)}</p>
-      </div>
-    </div>
-  );
-}
-
 /* ---------- Onglet Historique ---------- */
 function Historique() {
   const [versions, setVersions] = useState<Version[] | null>(null);
@@ -568,29 +518,21 @@ function Historique() {
 /* ---------- Onglet Aide ---------- */
 function Aide() {
   return (
-    <div className="flex flex-col gap-3 p-4">
+    <div className="flex flex-col gap-3 px-5 py-4">
+      <p className="text-[#9a9a9f]">Vous pouvez modifier l&apos;essentiel : vos horaires, vos formules et prix, votre téléphone et votre adresse, vos photos et vos actualités.</p>
       <p>
-        <strong>Modifier un texte</strong> : cliquez dessus (contour en pointillés) et écrivez. Les liens et la mise en page ne
-        bougent pas.
+        <strong>Horaires, prix, coordonnées</strong> : cliquez sur le texte entouré de pointillés et écrivez, ou demandez à l&apos;assistant.
       </p>
       <p>
-        <strong>Changer une photo</strong> : bouton « Changer les photos » en haut à gauche de chaque zone photo (JPG, PNG ou WebP,
-        8 Mo maximum).
+        <strong>Photos</strong> : bouton « Changer les photos » sur chaque zone photo (JPG, PNG ou WebP, 8 Mo maximum).
       </p>
       <p>
-        <strong>Assistant</strong> : décrivez le changement avec vos mots ; il le prépare et le surligne sur la page. Rien n&apos;est
-        publié tant que vous n&apos;avez pas cliqué sur « Enregistrer ».
+        <strong>Actualités</strong> : onglet « Actualités », puis « + Ajouter une actualité ». Elle apparaît aussitôt sur l&apos;accueil.
       </p>
       <p>
-        <strong>Annuler</strong> : onglet « Modifs » avant d&apos;enregistrer, ou « Historique » pour revenir à une version publiée.
+        <strong>Publier</strong> : rien n&apos;est en ligne tant que vous n&apos;avez pas cliqué sur « Enregistrer ». Une erreur ? « Historique » permet de revenir en arrière.
       </p>
-      <p>
-        <strong>Ajouter une actualité</strong> : onglet « Actus », puis « + Ajouter une actualité ». Titre, photo, texte : elle
-        apparaît aussitôt sur l&apos;accueil et dans « Toutes nos actualités ».
-      </p>
-      <p>
-        <strong>Autres pages</strong> : naviguez avec le menu ; enregistrez avant de changer de page.
-      </p>
+      <p className="text-[#9a9a9f]">Pour tout le reste (textes de présentation, nouvelles pages, Google), contactez votre agence.</p>
     </div>
   );
 }

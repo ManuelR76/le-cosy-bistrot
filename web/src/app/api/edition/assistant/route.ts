@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { sessionValide } from "@/lib/edition/auth";
+import { cheminAutorise } from "@/lib/edition/autorise";
 
 /**
  * Assistant en langage courant : transforme une demande (« passe la formule du samedi à 24,90 € »)
  * en propositions de modifications sur les seuls champs modifiables de la page.
  * Rien n'est enregistré ici : le client voit l'aperçu sur la page et valide avec « Enregistrer ».
  */
-const CLE = /^(site|accueil|privatisation|evenement|leCosyBistrot|retrouvezNous|articles|legal)(\.[A-Za-z0-9]+){1,6}$/;
 const MODELE = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
 
 type Champ = { chemin: string; texte: string; role?: string };
@@ -22,7 +22,8 @@ Règles :
 - Ne modifie que les champs listés, avec leur chemin exact. Ne crée jamais de chemin.
 - Change le minimum nécessaire ; garde le ton, la longueur et la typographie existants (ex. prix au format « 21,90€ »).
 - N'invente aucune information (prix, horaires, dates, noms) qui ne figure pas dans la demande.
-- Si la demande est ambiguë ou concerne un élément absent de la liste (autre page, lien, mise en page, couleur), ne propose rien et explique en une ou deux phrases ce qui est possible.
+- La personne ne peut modifier que ses horaires, ses formules et prix, son téléphone et son adresse (les champs listés). Si la demande porte sur autre chose (textes de présentation, titres, Google, mise en page, couleurs, autre page), ne propose rien : explique gentiment que l'agence s'en occupe, et rappelle ce qu'elle peut changer.
+- Pour une fermeture exceptionnelle ou un événement, propose d'ajouter une actualité (onglet « Actualités ») plutôt que de modifier les horaires habituels, sauf demande explicite.
 - Pour une photo, explique qu'il suffit de cliquer sur « Changer les photos » sur la zone concernée.
 - Ton message dit ce que tu as préparé et rappelle de cliquer sur « Enregistrer » pour publier.`;
 
@@ -52,7 +53,7 @@ export async function POST(req: Request) {
   if (!cle) return NextResponse.json({ erreur: "L'assistant n'est pas encore activé (clé API manquante)." }, { status: 503 });
 
   const body = (await req.json().catch(() => null)) as { historique?: Message[]; champs?: Champ[]; page?: string } | null;
-  const champs = (body?.champs ?? []).filter((c) => CLE.test(c.chemin)).slice(0, 200);
+  const champs = (body?.champs ?? []).filter((c) => cheminAutorise(c.chemin)).slice(0, 200);
   const historique = (body?.historique ?? []).filter((m) => m && typeof m.content === "string").slice(-10);
   if (!historique.length || historique[historique.length - 1].role !== "user")
     return NextResponse.json({ erreur: "Requête invalide." }, { status: 400 });

@@ -5,7 +5,6 @@ import { Diaporama } from "@/components/Diaporama";
 import { BoutonAjoutActualite } from "@/components/EditeurActualites";
 import { HeroSplit } from "@/components/HeroSplit";
 import { Horaires } from "@/components/Horaires";
-import { SeoEdition } from "@/components/SeoEdition";
 import { JsonLd } from "@/components/JsonLd";
 import { getArticles } from "@/lib/content";
 import { ed } from "@/lib/edition/attrs";
@@ -25,7 +24,6 @@ export default async function Accueil() {
 
   return (
     <>
-      <SeoEdition chemin="accueil.meta" title={accueil.meta.title} description={accueil.meta.description} />
       <JsonLd data={graphe({ path: "/", title: accueil.meta.title, description: accueil.meta.description, crumbs: [{ name: "Accueil", path: "/" }] })} />
 
       <HeroSplit

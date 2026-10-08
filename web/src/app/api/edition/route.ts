@@ -1,9 +1,9 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { sessionValide } from "@/lib/edition/auth";
+import { cheminAutorise } from "@/lib/edition/autorise";
 import { ecrireEdits, lireEdits, stockageDisponible, TAG } from "@/lib/edition/store";
 
-const CLE = /^(site|accueil|privatisation|evenement|leCosyBistrot|retrouvezNous|articles|legal)(\.[A-Za-z0-9]+){1,6}$/;
 
 /** Enregistre un lot de modifications { "accueil.hero.titre": "…" }. */
 export async function POST(req: Request) {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   if (!mods || typeof mods !== "object") return NextResponse.json({ erreur: "Requête invalide." }, { status: 400 });
   const propres: Record<string, string> = {};
   for (const [k, v] of Object.entries(mods)) {
-    if (!CLE.test(k) || typeof v !== "string" || v.length > 5000) continue;
+    if (!cheminAutorise(k) || typeof v !== "string" || v.length > 5000) continue;
     propres[k] = v.replace(/ /g, " ").trim();
   }
   const edits = { ...(await lireEdits()), ...propres };

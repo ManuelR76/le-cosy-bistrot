@@ -16,7 +16,7 @@ Lire `../contexte-projet/` avant chaque phase : inventaire, ARCHITECTURE.md, MIG
 ## Mode édition
 - `src/lib/edition/` : auth (cookie signé), store (Blob ou disque), contenu (fusion des modifications dans `src/content/pages.ts` + `site.config.ts`).
 - Rendre un texte éditable : `{...ed("accueil.hero.titre")}` sur l'élément ; photos : prop `chemin` de `Diaporama`/`Carrousel` ou `edPhotos()`.
-- Les clés acceptées par l'API suivent `^(site|accueil|privatisation|evenement|leCosyBistrot|retrouvezNous|articles|legal)\.…`.
+- Ce que le client peut modifier : `src/lib/edition/autorise.ts` (décision 30). `ed()` n'ajoute rien hors de cette liste ; l'API refuse le reste.
 
 ## Commandes
 npm run dev · npm run build · node scripts/check-redirects.mjs http://localhost:3000

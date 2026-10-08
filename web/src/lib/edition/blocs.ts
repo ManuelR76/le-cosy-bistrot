@@ -26,7 +26,7 @@ const BLOC = /<(p|h2|h3|h4|ul|ol|blockquote)\b([^>]*)>([\s\S]*?)<\/\1>/g;
 
 /**
  * Découpe un corps HTML en blocs modifiables : chaque paragraphe, intertitre et ligne de liste
- * reçoit un data-edit « <prefixe>.bN » (ou « bNiM » pour une ligne de liste) et, s'il a été modifié,
+  * (plus modifiable par le client depuis la décision 30 : seules les modifications déjà enregistrées s'appliquent) reçoit un chemin « <prefixe>.bN » (ou « bNiM » pour une ligne de liste) et, s'il a été modifié,
  * son texte remplace l'original.
  */
 export function blocsModifiables(html: string, prefixe: string, edits: Edits): string {
@@ -39,7 +39,7 @@ export function blocsModifiables(html: string, prefixe: string, edits: Edits): s
         const chemin = `${prefixe}.${id}i${m++}`;
         if (/<(p|ul|ol)\b/.test(li)) return _l; // liste imbriquée : laissée telle quelle
         const contenu = edits[chemin] !== undefined ? texteVersHtml(edits[chemin], li) : li;
-        return `<li${la} data-edit="${chemin}">${contenu}</li>`;
+        return `<li${la}>${contenu}</li>`;
       });
       return `<${tag}${attrs}>${lignes}</${tag}>`;
     }
@@ -47,6 +47,6 @@ export function blocsModifiables(html: string, prefixe: string, edits: Edits): s
     const chemin = `${prefixe}.${id}`;
     if (/<(img|iframe|figure|table)\b/.test(interieur)) return tout; // bloc média : non modifiable en texte
     const contenu = edits[chemin] !== undefined ? texteVersHtml(edits[chemin], interieur) : interieur;
-    return `<${tag}${attrs} data-edit="${chemin}">${contenu}</${tag}>`;
+    return `<${tag}${attrs}>${contenu}</${tag}>`;
   });
 }

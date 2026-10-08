@@ -1,7 +1,6 @@
 import { CarteGoogle } from "@/components/CarteGoogle";
 import { Horaires } from "@/components/Horaires";
 import { IconeLieu, IconeTel } from "@/components/Icones";
-import { SeoEdition } from "@/components/SeoEdition";
 import { JsonLd } from "@/components/JsonLd";
 import { ed } from "@/lib/edition/attrs";
 import { getContenu } from "@/lib/edition/contenu";
@@ -17,7 +16,6 @@ export default async function Page() {
   const { retrouvezNous: d, site } = await getContenu();
   return (
     <>
-      <SeoEdition chemin="retrouvezNous.meta" title={d.meta.title} description={d.meta.description} />
       <JsonLd
         data={graphe({
           path: "/retrouvez-nous/",

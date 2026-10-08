@@ -1,5 +1,4 @@
 import { Carrousel } from "@/components/Carrousel";
-import { SeoEdition } from "@/components/SeoEdition";
 import { JsonLd } from "@/components/JsonLd";
 import { Media } from "@/components/Media";
 import { type Bloc } from "@/content/pages";
@@ -40,7 +39,6 @@ export default async function Page() {
   const d = (await getContenu()).leCosyBistrot;
   return (
     <>
-      <SeoEdition chemin="leCosyBistrot.meta" title={d.meta.title} description={d.meta.description} />
       <JsonLd
         data={graphe({
           path: "/le-cosy-bistrot/",
