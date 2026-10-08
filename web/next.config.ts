@@ -45,7 +45,9 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    formats: ["image/avif", "image/webp"],
+    // WebP seul : l'encodage AVIF est lent sur l'hébergement mutualisé (première visite de chaque image).
+    formats: ["image/webp"],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       { protocol: "https", hostname: media.hostname, pathname: "/wp-content/uploads/**" },
     ],
