@@ -181,20 +181,75 @@ export function Editeur() {
     [noter],
   );
 
-  const changerPhoto = useCallback(async (g: Groupe, index: number, fichier: File) => {
+  const televerser = useCallback(async (fichier: File) => {
     setMessage("Envoi de la photo…");
     const fd = new FormData();
     fd.append("photo", fichier);
     const res = await fetch("/api/edition/photo/", { method: "POST", body: fd });
     const json = await res.json();
-    if (!res.ok) return setMessage(json.erreur || "Échec de l'envoi.");
-    const chemin = g.unique ? `${g.chemin}.src` : `${g.chemin}.${index}.src`;
-    const avant = g.srcs[index];
-    g.srcs[index] = json.url;
-    setMods((m) => ({ ...m, [chemin]: { avant: m[chemin]?.avant ?? avant, apres: json.url, libelle: "Photo" } }));
-    setPanneauPhotos({ ...g });
-    setMessage("Photo prête : pensez à enregistrer.");
+    if (!res.ok) {
+      setMessage(json.erreur || "Échec de l'envoi.");
+      return null;
+    }
+    return json.url as string;
   }, []);
+
+  /** Enregistre l'état d'un groupe de photos (liste complète, dans l'ordre) dans les modifications en attente. */
+  const noterPhotos = useCallback((g: Groupe, avantSrcs: string[]) => {
+    if (g.unique) return;
+    const chemin = `${g.chemin}.liste`;
+    setMods((m) => ({ ...m, [chemin]: { avant: m[chemin]?.avant ?? JSON.stringify(avantSrcs), apres: JSON.stringify(g.srcs), libelle: "Photo" } }));
+    setPanneauPhotos({ ...g });
+    setMessage("Photos prêtes : pensez à enregistrer.");
+  }, []);
+
+  const changerPhoto = useCallback(
+    async (g: Groupe, index: number, fichier: File) => {
+      const url = await televerser(fichier);
+      if (!url) return;
+      const avantSrcs = [...g.srcs];
+      g.srcs[index] = url;
+      if (g.unique) {
+        const chemin = `${g.chemin}.src`;
+        setMods((m) => ({ ...m, [chemin]: { avant: m[chemin]?.avant ?? avantSrcs[index], apres: url, libelle: "Photo" } }));
+        setPanneauPhotos({ ...g });
+        setMessage("Photo prête : pensez à enregistrer.");
+      } else noterPhotos(g, avantSrcs);
+    },
+    [televerser, noterPhotos],
+  );
+
+  const ajouterPhoto = useCallback(
+    async (g: Groupe, fichier: File) => {
+      const url = await televerser(fichier);
+      if (!url) return;
+      const avantSrcs = [...g.srcs];
+      g.srcs.push(url);
+      noterPhotos(g, avantSrcs);
+    },
+    [televerser, noterPhotos],
+  );
+
+  const retirerPhoto = useCallback(
+    (g: Groupe, index: number) => {
+      if (g.srcs.length < 2) return setMessage("Gardez au moins une photo.");
+      const avantSrcs = [...g.srcs];
+      g.srcs.splice(index, 1);
+      noterPhotos(g, avantSrcs);
+    },
+    [noterPhotos],
+  );
+
+  const deplacerPhoto = useCallback(
+    (g: Groupe, index: number, sens: -1 | 1) => {
+      const j = index + sens;
+      if (j < 0 || j >= g.srcs.length) return;
+      const avantSrcs = [...g.srcs];
+      [g.srcs[index], g.srcs[j]] = [g.srcs[j], g.srcs[index]];
+      noterPhotos(g, avantSrcs);
+    },
+    [noterPhotos],
+  );
 
   if (!actif) return null;
   const n = Object.keys(mods).length;
@@ -216,7 +271,7 @@ export function Editeur() {
       {groupes.map((g) => (
         <BoutonPhotos key={g.chemin} groupe={g} onOuvrir={() => setPanneauPhotos(g)} />
       ))}
-      {panneauPhotos && <PanneauPhotos groupe={panneauPhotos} onFermer={() => setPanneauPhotos(null)} onChanger={changerPhoto} />}
+      {panneauPhotos && <PanneauPhotos groupe={panneauPhotos} onFermer={() => setPanneauPhotos(null)} onChanger={changerPhoto} onAjouter={ajouterPhoto} onRetirer={retirerPhoto} onDeplacer={deplacerPhoto} />}
 
       {!ouvert ? (
         <button
@@ -574,7 +629,7 @@ function Aide() {
         bougent pas.
       </p>
       <p>
-        <strong>Changer une photo</strong> : bouton « Changer les photos » en haut à gauche de chaque zone photo (JPG, PNG ou WebP,
+        <strong>Changer une photo</strong> : bouton « Gérer les photos » en haut à gauche de chaque zone photo : remplacer, ajouter, retirer ou réordonner (JPG, PNG ou WebP,
         8 Mo maximum).
       </p>
       <p>
@@ -596,32 +651,63 @@ function Aide() {
 }
 
 /* ---------- Photos ---------- */
-function PanneauPhotos({ groupe, onFermer, onChanger }: { groupe: Groupe; onFermer: () => void; onChanger: (g: Groupe, i: number, f: File) => void }) {
+function PanneauPhotos({
+  groupe,
+  onFermer,
+  onChanger,
+  onAjouter,
+  onRetirer,
+  onDeplacer,
+}: {
+  groupe: Groupe;
+  onFermer: () => void;
+  onChanger: (g: Groupe, i: number, f: File) => void;
+  onAjouter: (g: Groupe, f: File) => void;
+  onRetirer: (g: Groupe, i: number) => void;
+  onDeplacer: (g: Groupe, i: number, sens: -1 | 1) => void;
+}) {
+  const accept = "image/jpeg,image/png,image/webp,image/avif";
   return (
-    <div role="dialog" aria-modal="true" aria-label="Changer les photos" className="ui-edition fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4">
+    <div role="dialog" aria-modal="true" aria-label="Gérer les photos" className="ui-edition fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4">
       <div className="max-h-[90vh] w-full max-w-[720px] overflow-auto rounded-2xl bg-[#161618] p-6 shadow-2xl ring-1 ring-white/10">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-[20px] font-semibold">Changer les photos</p>
+          <p className="text-[20px] font-semibold">{groupe.unique ? "Changer la photo" : `Photos (${groupe.srcs.length})`}</p>
           <button type="button" onClick={onFermer} className="btn btn-clair text-[18px]">
             Fermer
           </button>
         </div>
         <ul className="grid grid-cols-2 gap-4 tab:grid-cols-3">
           {groupe.srcs.map((src, i) => (
-            <li key={i} className="flex flex-col gap-2">
+            <li key={`${i}-${src}`} className="flex flex-col gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={mediaUrl(src)} alt="" className="aspect-[4/3] w-full object-cover" />
               <label className="btn cursor-pointer text-center text-[16px]">
                 Remplacer
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/avif"
-                  className="sr-only"
-                  onChange={(e) => e.target.files?.[0] && onChanger(groupe, i, e.target.files[0])}
-                />
+                <input type="file" accept={accept} className="sr-only" onChange={(e) => e.target.files?.[0] && onChanger(groupe, i, e.target.files[0])} />
               </label>
+              {!groupe.unique && (
+                <div className="flex gap-2 text-[16px]">
+                  <button type="button" aria-label="Déplacer avant" disabled={i === 0} onClick={() => onDeplacer(groupe, i, -1)} className="btn btn-clair flex-1 disabled:opacity-30">
+                    ←
+                  </button>
+                  <button type="button" aria-label="Déplacer après" disabled={i === groupe.srcs.length - 1} onClick={() => onDeplacer(groupe, i, 1)} className="btn btn-clair flex-1 disabled:opacity-30">
+                    →
+                  </button>
+                  <button type="button" onClick={() => onRetirer(groupe, i)} disabled={groupe.srcs.length < 2} className="btn btn-clair flex-1 disabled:opacity-30">
+                    Retirer
+                  </button>
+                </div>
+              )}
             </li>
           ))}
+          {!groupe.unique && (
+            <li className="flex">
+              <label className="btn flex aspect-[4/3] w-full cursor-pointer items-center justify-center text-center text-[16px]">
+                + Ajouter une photo
+                <input type="file" accept={accept} className="sr-only" onChange={(e) => e.target.files?.[0] && onAjouter(groupe, e.target.files[0])} />
+              </label>
+            </li>
+          )}
         </ul>
       </div>
     </div>
@@ -645,7 +731,7 @@ function BoutonPhotos({ groupe, onOuvrir }: { groupe: Groupe; onOuvrir: () => vo
   if (!pos) return null;
   return (
     <button type="button" onClick={onOuvrir} style={{ position: "absolute", ...pos }} className="ui-edition btn z-[55] text-[16px] shadow-lg">
-      Changer {groupe.srcs.length > 1 ? `les ${groupe.srcs.length} photos` : "la photo"}
+      {groupe.unique ? "Changer la photo" : `Gérer les photos (${groupe.srcs.length})`}
     </button>
   );
 }
