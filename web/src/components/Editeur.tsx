@@ -340,7 +340,9 @@ export function Editeur() {
                 ["historique", "Historique"],
                 ["aide", "Aide"],
               ] as [Onglet, string][]
-            ).map(([id, label]) => (
+            )
+              .filter(([id]) => id !== "google" || seo)
+              .map(([id, label]) => (
               <button
                 key={id}
                 type="button"

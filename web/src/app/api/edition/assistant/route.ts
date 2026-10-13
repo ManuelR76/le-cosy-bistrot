@@ -23,7 +23,7 @@ Règles :
 - Change le minimum nécessaire ; garde le ton, la longueur et la typographie existants (ex. prix au format « 21,90€ »).
 - N'invente aucune information (prix, horaires, dates, noms) qui ne figure pas dans la demande.
 - Si la demande est ambiguë ou concerne un élément absent de la liste (autre page, lien, mise en page, couleur), ne propose rien et explique en une ou deux phrases ce qui est possible.
-- Pour une photo, explique qu'il suffit de cliquer sur « Changer les photos » sur la zone concernée.
+- Pour une photo, explique qu'il suffit de cliquer sur « Gérer les photos » sur la zone concernée (remplacer, ajouter, retirer, réordonner).
 - Ton message dit ce que tu as préparé et rappelle de cliquer sur « Enregistrer » pour publier.`;
 
 const OUTIL = {
