@@ -7,7 +7,7 @@ import { sessionValide } from "@/lib/edition/auth";
  * Rien n'est enregistré ici : le client voit l'aperçu sur la page et valide avec « Enregistrer ».
  */
 const CLE = /^(site|accueil|privatisation|evenement|leCosyBistrot|retrouvezNous|articles|legal)(\.[A-Za-z0-9]+){1,6}$/;
-const MODELE = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
+const MODELE = process.env.ANTHROPIC_MODEL || "claude-haiku-5-5";
 
 type Champ = { chemin: string; texte: string; role?: string };
 type Message = { role: "user" | "assistant"; content: string };
@@ -81,7 +81,20 @@ export async function POST(req: Request) {
     return null;
   });
   if (res && !res.ok) console.error("[assistant] API", res.status, (await res.text()).slice(0, 500));
-  if (!res?.ok) return NextResponse.json({ erreur: "L'assistant ne répond pas pour le moment. Réessayez dans un instant." }, { status: 502 });
+  if (!res?.ok) {
+    const code = res?.status;
+    const detail =
+      code === 401 || code === 403
+        ? "clé API refusée"
+        : code === 404
+          ? "modèle introuvable"
+          : code === 429
+            ? "quota ou limite de débit atteint"
+            : code
+              ? `erreur ${code}`
+              : "connexion à l'API impossible";
+    return NextResponse.json({ erreur: `L'assistant ne répond pas pour le moment (${detail}). Réessayez dans un instant.` }, { status: 502 });
+  }
 
   const data = (await res.json()) as {
     content?: { type: string; text?: string; input?: { message?: string; modifications?: { chemin: string; valeur: string }[] } }[];

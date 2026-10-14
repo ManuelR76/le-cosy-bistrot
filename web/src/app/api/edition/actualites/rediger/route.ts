@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { sessionValide } from "@/lib/edition/auth";
 
 /** Rédige un titre et un texte d'actualité à partir de quelques notes (assistant Claude). */
-const MODELE = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
+const MODELE = process.env.ANTHROPIC_MODEL || "claude-haiku-5-5";
 
 const SYSTEME = `Tu rédiges les actualités du site du restaurant « Le Cosy Bistrot » à Bourg-Achard (cuisine maison, ambiance chaleureuse et conviviale).
 À partir des notes de la gérante, écris une actualité courte en français : un titre accrocheur (60 caractères maximum) et 2 à 4 paragraphes simples séparés par une ligne vide.
