@@ -593,32 +593,42 @@ function Historique() {
 
   if (erreur) return <p className="p-4 text-beige">{erreur}</p>;
   if (!versions) return <p className="p-4 text-gris">Chargement…</p>;
-  if (!versions.length) return <p className="p-4 text-gris">Aucune version précédente pour l&apos;instant : elles apparaîtront après vos premiers enregistrements.</p>;
+  if (!versions.length) return <p className="p-4 text-gris">Rien à restaurer pour l&apos;instant : les anciennes versions apparaîtront après vos premiers enregistrements.</p>;
+  const jour = (iso: string) => {
+    const d = new Date(iso);
+    const heure = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" });
+    const dj = (x: Date) => x.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" });
+    const hier = new Date(Date.now() - 86_400_000);
+    if (dj(d) === dj(new Date())) return `Aujourd'hui, ${heure}`;
+    if (dj(d) === dj(hier)) return `Hier, ${heure}`;
+    return `${d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Paris" })}, ${heure}`;
+  };
   return (
-    <ul className="divide-y divide-beige/20">
-      {versions.map((v) => (
-        <li key={v.id} className="flex items-center justify-between gap-3 px-4 py-3">
-          <span>
-            Avant l&apos;enregistrement du{" "}
-            {new Date(v.date).toLocaleString("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" })}
-          </span>
-          {aConfirmer === v.id ? (
-            <span className="flex gap-2 text-sm">
-              <button type="button" className="btn px-2 py-1 text-[15px]" onClick={() => restaurer(v.id)}>
-                Confirmer
+    <div className="flex flex-col gap-2 p-4">
+      <p className="text-gris">Revenez à une version du site telle qu&apos;elle était avant un enregistrement.</p>
+      <ul className="flex flex-col gap-1">
+        {versions.slice(0, 10).map((v) => (
+          <li key={v.id} className="flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-2">
+            <span className="first-letter:uppercase">{jour(v.date)}</span>
+            {aConfirmer === v.id ? (
+              <span className="flex items-center gap-3 text-sm">
+                <button type="button" className="btn px-3 py-1 text-[15px]" onClick={() => restaurer(v.id)}>
+                  Oui, restaurer
+                </button>
+                <button type="button" className="text-gris underline" onClick={() => setAConfirmer(null)}>
+                  Annuler
+                </button>
+              </span>
+            ) : (
+              <button type="button" className="rounded-full border border-beige/50 px-3 py-1 text-sm text-beige hover:bg-beige/10" onClick={() => setAConfirmer(v.id)}>
+                Restaurer
               </button>
-              <button type="button" className="underline" onClick={() => setAConfirmer(null)}>
-                Non
-              </button>
-            </span>
-          ) : (
-            <button type="button" className="text-sm text-beige underline" onClick={() => setAConfirmer(v.id)}>
-              Revenir à cette version
-            </button>
-          )}
-        </li>
-      ))}
-    </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+      {versions.length > 10 && <p className="text-xs text-gris">Les 10 versions les plus récentes sont affichées.</p>}
+    </div>
   );
 }
 
