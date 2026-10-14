@@ -1,0 +1,35 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/articles/layout,_N_T_/articles/page,_N_T_/articles,wordpress"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/_index",
+    "/articles/__PAGE__"
+  ],
+  "prefetchHints": {
+    "hints": 0,
+    "slots": {
+      "children": {
+        "hints": 64,
+        "slots": {
+          "children": {
+            "hints": 160,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/5aa097dcf12ca3393bff1e2795b957c8a66751f2a3f7b5a8e93dc052fcc99cad/$/articles",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/articles/page"
+    },
+    "isFallback": false
+  }
+}

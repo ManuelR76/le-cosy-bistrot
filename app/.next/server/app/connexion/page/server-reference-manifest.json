@@ -1,0 +1,15 @@
+{
+  "node": {
+    "605cd224544d4d6e0437f84da59d848bd44f212c21": {
+      "workers": {
+        "app/connexion/page": {
+          "moduleId": 69419,
+          "async": false
+        }
+      },
+      "exportedName": "connexion",
+      "filename": "src/app/connexion/actions.ts"
+    }
+  },
+  "edge": {}
+}

@@ -1,0 +1,6 @@
+{
+  "name": "le-cosy-bistrot-hostinger",
+  "private": true,
+  "scripts": { "build": "echo deja compile", "start": "node app/server.js" },
+  "dependencies": {}
+}
