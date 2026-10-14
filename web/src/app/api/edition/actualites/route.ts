@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   const titre = (b?.titre ?? "").trim();
   const texte = (b?.texte ?? "").replace(/\r/g, "").trim();
   if (titre.length < 3 || titre.length > 140) return NextResponse.json({ erreur: "Le titre doit faire entre 3 et 140 caractères." }, { status: 400 });
-  if (texte.length < 20 || texte.length > 20000) return NextResponse.json({ erreur: "Le texte est trop court (20 caractères minimum)." }, { status: 400 });
+  if (texte.length < 3 || texte.length > 20000) return NextResponse.json({ erreur: "Le texte est trop court (3 caractères minimum)." }, { status: 400 });
   const date = b?.date && !Number.isNaN(Date.parse(b.date)) ? new Date(b.date).toISOString() : new Date().toISOString();
   const image =
     b?.image && typeof b.image.src === "string" && /^\/medias\/[\w.-]+$|^\/wp-content\/uploads\//.test(b.image.src)

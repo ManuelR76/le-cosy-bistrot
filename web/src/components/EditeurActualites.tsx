@@ -188,23 +188,6 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
         </header>
 
         <div className="flex flex-col gap-5 overflow-y-auto px-5 py-5">
-          {assistant && !initial.id && (
-            <section className="border border-beige/40 bg-[#1b1b1b] p-4">
-              <p className="font-bold">Besoin d&apos;aide pour écrire ?</p>
-              <p className="mb-2 text-gris">Notez l&apos;essentiel en quelques mots, l&apos;assistant rédige le titre et le texte.</p>
-              <textarea
-                rows={2}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Ex. : soirée jazz samedi 14 novembre, groupe Les Copains d'abord, menu spécial 32 €, réservation par téléphone"
-                className="w-full resize-none border border-gris/40 bg-noir px-3 py-2"
-              />
-              <button type="button" onClick={rediger} disabled={!!occupe || notes.trim().length < 5} className="btn mt-2 text-[18px] disabled:opacity-40">
-                {occupe === "redaction" ? "Rédaction…" : "Rédiger pour moi"}
-              </button>
-            </section>
-          )}
-
           <label className="flex flex-col gap-1">
             <span className="font-bold">1. Titre</span>
             <input value={b.titre} onChange={(e) => maj({ titre: e.target.value })} maxLength={140} placeholder="Ex. : Soirée jazz le 14 novembre" className="border border-gris/40 bg-[#1b1b1b] px-3 py-2 text-[17px]" />
@@ -242,6 +225,23 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
             </span>
           </label>
 
+          {assistant && !initial.id && (
+            <details className="border border-beige/40 bg-[#1b1b1b] p-4">
+              <summary className="cursor-pointer font-bold">Facultatif : se faire aider par l&apos;assistant pour écrire</summary>
+              <p className="mb-2 text-gris">Notez l&apos;essentiel en quelques mots, l&apos;assistant rédige le titre et le texte.</p>
+              <textarea
+                rows={2}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Ex. : soirée jazz samedi 14 novembre, groupe Les Copains d'abord, menu spécial 32 €, réservation par téléphone"
+                className="w-full resize-none border border-gris/40 bg-noir px-3 py-2"
+              />
+              <button type="button" onClick={rediger} disabled={!!occupe || notes.trim().length < 5} className="btn mt-2 text-[18px] disabled:opacity-40">
+                {occupe === "redaction" ? "Rédaction…" : "Rédiger pour moi"}
+              </button>
+            </details>
+          )}
+
           <label className="flex w-fit flex-col gap-1">
             <span className="font-bold">4. Date de l&apos;actualité</span>
             <input type="date" value={b.date.slice(0, 10)} onChange={(e) => maj({ date: e.target.value })} className="border border-gris/40 bg-[#1b1b1b] px-3 py-2 [color-scheme:dark]" />
@@ -249,6 +249,9 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
         </div>
 
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-beige/30 px-5 py-4">
+          {!etat && !occupe && (b.titre.trim().length < 3 || b.texte.trim().length < 3) && (
+            <p className="w-full text-xs text-gris">Pour publier : un titre (3 lettres minimum) et un texte. La photo est facultative.</p>
+          )}
           <p role="status" className={etat?.type === "erreur" ? "text-beige" : etat?.type === "ok" ? "text-blanc" : "text-gris"}>
             {etat?.texte}{" "}
             {etat?.url && (
@@ -263,7 +266,7 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
                 Terminer
               </button>
             )}
-            <button type="button" onClick={publier} disabled={!!occupe || b.titre.trim().length < 3 || b.texte.trim().length < 20} className="btn text-[18px] disabled:opacity-40">
+            <button type="button" onClick={publier} disabled={!!occupe || b.titre.trim().length < 3 || b.texte.trim().length < 3} className="btn text-[18px] disabled:opacity-40">
               {occupe === "publication" ? "Publication…" : b.id ? "Enregistrer les changements" : "Publier"}
             </button>
           </div>
