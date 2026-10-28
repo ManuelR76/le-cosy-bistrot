@@ -22,10 +22,12 @@ const MODELES = [
 const champ = "border border-gris/40 bg-[#1b1b1b] px-3 py-2 [color-scheme:dark]";
 
 /** Onglet « Bandeau » : message en haut du site ou pop-up sur l'accueil. */
-export function OngletBandeau() {
+export function OngletBandeau({ assistant = false }: { assistant?: boolean }) {
   const [b, setB] = useState<B | null>(null);
   const [etat, setEtat] = useState<{ ok: boolean; texte: string } | null>(null);
   const [occupe, setOccupe] = useState(false);
+  const [notes, setNotes] = useState("");
+  const [redaction, setRedaction] = useState(false);
 
   useEffect(() => {
     let vivant = true;
@@ -56,6 +58,17 @@ export function OngletBandeau() {
     setEtat({ ok: true, texte: j.bandeau.actif ? "Bandeau enregistré. Il apparaît sur le site d'ici une minute." : "Bandeau désactivé (le texte est conservé)." });
   };
 
+  const rediger = async () => {
+    setRedaction(true);
+    setEtat(null);
+    const r = await fetch("/api/edition/bandeau/rediger/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ notes }) });
+    const j = await r.json().catch(() => ({ erreur: "Réponse invalide." }));
+    setRedaction(false);
+    if (!r.ok) return setEtat({ ok: false, texte: j.erreur });
+    maj({ texte: j.texte, lien: b.lien?.href ? b.lien : null });
+    setEtat({ ok: true, texte: "Proposition prête : relisez-la et corrigez-la si besoin avant d'enregistrer." });
+  };
+
   const voirPopup = () => {
     try {
       sessionStorage.removeItem(`cosy-popup-${b.version}`);
@@ -69,6 +82,16 @@ export function OngletBandeau() {
         <input type="checkbox" checked={b.actif} onChange={(e) => maj({ actif: e.target.checked })} className="h-5 w-5" />
         Afficher le bandeau sur le site
       </label>
+
+      {assistant && (
+        <details className="border border-beige/40 bg-[#1b1b1b] p-3">
+          <summary className="cursor-pointer font-bold">Facultatif : se faire aider pour écrire</summary>
+          <textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex. : fermé du 3 au 10 janvier pour congés, réouverture le 11" className={`${champ} mt-2 w-full resize-none`} />
+          <button type="button" onClick={rediger} disabled={redaction || notes.trim().length < 5} className="btn mt-2 text-[16px] disabled:opacity-40">
+            {redaction ? "Rédaction…" : "Rédiger pour moi"}
+          </button>
+        </details>
+      )}
 
       <div className="flex flex-col gap-1">
         <span className="font-bold">Message</span>

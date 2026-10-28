@@ -48,6 +48,10 @@ export async function POST(req: Request) {
   // Date de fin facultative : absente ou vide = « sans date ».
   const fin = typeof b?.fin === "string" && b.fin ? b.fin : undefined;
   if (fin && (!JOUR.test(fin) || Number.isNaN(Date.parse(fin)))) return NextResponse.json({ erreur: "Date de fin invalide." }, { status: 400 });
+  const debut = typeof b?.debut === "string" && b.debut ? b.debut : undefined;
+  if (debut && (!JOUR.test(debut) || Number.isNaN(Date.parse(debut)))) return NextResponse.json({ erreur: "Date de début invalide." }, { status: 400 });
+  if (debut && fin && fin < debut) return NextResponse.json({ erreur: "La fin de publication est avant le début." }, { status: 400 });
+  const epingle = b?.epingle === true;
   const image =
     b?.image && typeof b.image.src === "string" && /^\/medias\/[\w.-]+$|^\/wp-content\/uploads\//.test(b.image.src)
       ? { src: b.image.src, alt: String(b.image.alt ?? titre).slice(0, 200) }
@@ -58,13 +62,13 @@ export async function POST(req: Request) {
   let actu = b?.id ? actus.find((a) => a.id === b.id) : undefined;
   const anciens = actu ? [actu.slug] : [];
   if (actu) {
-    Object.assign(actu, { titre, texte, date, image, fin, modifie: maintenant });
+    Object.assign(actu, { titre, texte, date, image, fin, debut, epingle, modifie: maintenant });
   } else {
     // Adresse de l'article : tirée du titre, unique, sans collision avec une page du site.
     const pris = new Set([...(await getArticles()).map((a) => a.slug), ...actus.map((a) => a.slug), ...RESERVES]);
     let slug = slugifier(titre) || "actualite";
     for (let i = 2; pris.has(slug); i++) slug = `${slugifier(titre)}-${i}`;
-    actu = { id: crypto.randomUUID(), slug, titre, texte, date, modifie: maintenant, image, ...(fin ? { fin } : {}) };
+    actu = { id: crypto.randomUUID(), slug, titre, texte, date, modifie: maintenant, image, ...(fin ? { fin } : {}), ...(debut ? { debut } : {}), ...(epingle ? { epingle } : {}) };
     actus.push(actu);
   }
   await ecrireActualites(actus);

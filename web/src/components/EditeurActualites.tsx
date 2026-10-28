@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { mediaUrl } from "@/lib/media";
 
-type Actu = { id: string; slug: string; titre: string; texte: string; date: string; fin?: string; image: { src: string; alt: string } | null };
-type Brouillon = { id?: string; titre: string; texte: string; date: string; fin?: string; image: Actu["image"] };
+type Actu = { id: string; slug: string; titre: string; texte: string; date: string; fin?: string; debut?: string; epingle?: boolean; image: { src: string; alt: string } | null };
+type Brouillon = { id?: string; titre: string; texte: string; date: string; fin?: string; debut?: string; epingle?: boolean; image: Actu["image"] };
 
 export const EVT_NOUVELLE_ACTU = "cosy:nouvelle-actu";
 const aujourdhui = () => new Date().toISOString().slice(0, 10);
-const vide = (): Brouillon => ({ titre: "", texte: "", date: aujourdhui(), fin: "", image: null });
+const vide = (): Brouillon => ({ titre: "", texte: "", date: aujourdhui(), fin: "", debut: "", epingle: false, image: null });
 const jourFr = (d: string) => new Date(d + "T12:00:00").toLocaleDateString("fr-FR", { dateStyle: "long" });
 
 /** Onglet « Actualités » du panneau : liste + bouton d'ajout. */
@@ -82,6 +82,8 @@ export function OngletActualites({ assistant, ouvrirDirect = false, onFormFerme 
                 <p className="truncate font-bold">{a.titre}</p>
                 <p className="text-xs text-gris">
                   {new Date(a.date).toLocaleDateString("fr-FR", { dateStyle: "long" })}
+                  {a.epingle && <span className="ml-2 rounded bg-rouge px-1.5 py-0.5 text-blanc">Épinglée</span>}
+                  {a.debut && a.debut > aujourdhui() && <span className="ml-2 rounded bg-beige/20 px-1.5 py-0.5 text-beige">Programmée le {jourFr(a.debut)}</span>}
                   {a.fin && (a.fin < aujourdhui() ? (
                     <span className="ml-2 rounded bg-beige/20 px-1.5 py-0.5 text-beige">Expirée, non visible</span>
                   ) : (
@@ -92,7 +94,7 @@ export function OngletActualites({ assistant, ouvrirDirect = false, onFormFerme 
                   <a href={`/${a.slug}/`} className="underline">
                     Voir
                   </a>
-                  <button type="button" className="underline" onClick={() => setForm({ ...a, date: a.date.slice(0, 10), fin: a.fin || "" })}>
+                  <button type="button" className="underline" onClick={() => setForm({ ...a, date: a.date.slice(0, 10), fin: a.fin || "", debut: a.debut || "", epingle: !!a.epingle })}>
                     Modifier
                   </button>
                   {aSupprimer === a.id ? (
@@ -181,7 +183,7 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
     const r = await fetch("/api/edition/actualites/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...b, fin: b.fin || "", image: b.image ? { ...b.image, alt: b.image.alt || b.titre } : null }),
+      body: JSON.stringify({ ...b, fin: b.fin || "", debut: b.debut || "", epingle: !!b.epingle, image: b.image ? { ...b.image, alt: b.image.alt || b.titre } : null }),
     });
     const j = await r.json();
     setOccupe(null);
@@ -265,15 +267,27 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
           </label>
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="font-bold">5. Fin de publication</legend>
+            <legend className="font-bold">5. Période de publication</legend>
+            <span className="text-sm text-gris">Début</span>
+            <label className="flex items-center gap-2">
+              <input type="radio" name="debut" checked={!b.debut} onChange={() => maj({ debut: "" })} /> Tout de suite
+            </label>
+            <label className="flex flex-wrap items-center gap-2">
+              <input type="radio" name="debut" checked={!!b.debut} onChange={() => maj({ debut: b.debut || aujourdhui() })} /> À partir du
+              <input type="date" value={b.debut || ""} min={aujourdhui()} onChange={(e) => maj({ debut: e.target.value })} className="border border-gris/40 bg-[#1b1b1b] px-3 py-2 [color-scheme:dark]" />
+            </label>
+            <span className="mt-1 text-sm text-gris">Fin</span>
             <label className="flex items-center gap-2">
               <input type="radio" name="fin" checked={!b.fin} onChange={() => maj({ fin: "" })} /> Sans date (reste en ligne)
             </label>
             <label className="flex flex-wrap items-center gap-2">
               <input type="radio" name="fin" checked={!!b.fin} onChange={() => maj({ fin: b.fin || b.date.slice(0, 10) })} /> Jusqu&apos;au
-              <input type="date" value={b.fin || ""} min={b.date.slice(0, 10)} onChange={(e) => maj({ fin: e.target.value })} className="border border-gris/40 bg-[#1b1b1b] px-3 py-2 [color-scheme:dark]" />
+              <input type="date" value={b.fin || ""} min={b.debut || b.date.slice(0, 10)} onChange={(e) => maj({ fin: e.target.value })} className="border border-gris/40 bg-[#1b1b1b] px-3 py-2 [color-scheme:dark]" />
             </label>
-            <span className="text-xs text-gris">Après cette date, l&apos;actualité disparaît du site. Vous pouvez la remettre en changeant la date.</span>
+            <span className="text-xs text-gris">Après la fin, l&apos;actualité disparaît du site. Vous pouvez la remettre en changeant la date. Une actualité programmée apparaît d&apos;elle-même au jour choisi (comptez quelques minutes).</span>
+            <label className="mt-2 flex items-center gap-2 font-bold">
+              <input type="checkbox" checked={!!b.epingle} onChange={(e) => maj({ epingle: e.target.checked })} className="h-5 w-5" /> Épingler : toujours en tête de l&apos;accueil et de la liste
+            </label>
           </fieldset>
         </div>
 

@@ -375,7 +375,7 @@ export function Editeur() {
                 </p>
               ))}
             {onglet === "actus" && <OngletActualites key={demandeActu} assistant={assistantActif} ouvrirDirect={demandeActu > 0} onFormFerme={() => setDemandeActu(0)} />}
-            {onglet === "bandeau" && <OngletBandeau />}
+            {onglet === "bandeau" && <OngletBandeau assistant={assistantActif} />}
             {onglet === "modifs" && <Modifs mods={mods} onAnnuler={annuler} />}
             {onglet === "google" && <Google seo={seo} mods={mods} onChanger={noter} />}
             {onglet === "historique" && <Historique />}
@@ -665,7 +665,7 @@ function Aide() {
       </p>
       <p>
         <strong>Ajouter une actualité</strong> : onglet « Actus », puis « + Ajouter une actualité ». Titre, photo, texte : elle
-        apparaît aussitôt sur l&apos;accueil et dans « Toutes nos actualités ». Vous pouvez fixer une date de fin de publication (ou « Sans date »).
+        apparaît aussitôt sur l&apos;accueil et dans « Toutes nos actualités ». Vous pouvez la programmer (début), fixer une date de fin (ou « Sans date ») et l&apos;épingler en tête de l&apos;accueil.
       </p>
       <p>
         <strong>Bandeau d&apos;information</strong> : onglet « Bandeau ». Un message (recrutement, fermeture…) en haut du site ou en pop-up

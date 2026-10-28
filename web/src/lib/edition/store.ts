@@ -92,6 +92,10 @@ export type Actualite = {
   image: { src: string; alt: string } | null;
   /** Dernier jour de publication (AAAA-MM-JJ, heure de Paris). Absent : pas de date de fin. */
   fin?: string;
+  /** Premier jour de publication (AAAA-MM-JJ). Absent : en ligne tout de suite. */
+  debut?: string;
+  /** Épinglée : reste en tête des listes et de l'accueil. */
+  epingle?: boolean;
 };
 export const TAG_ACTUS = "actualites";
 const FICHIER_ACTUS = "actualites.json";

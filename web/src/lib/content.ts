@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { markdownToHtml, parseMarkdown, stripTags } from "./markdown";
-import { termine } from "./edition/dates";
+import { dansPeriode } from "./edition/dates";
 import { lireActualites, lireEdits, type Actualite } from "./edition/store";
 import { blocsModifiables, cleDe } from "./edition/blocs";
 import { nettoyerContenu, wpPosts } from "./wordpress";
@@ -21,6 +21,7 @@ export type Article = {
   image: { src: string; alt: string } | null;
   /** Chemin d'édition sur la page (absent pour les actualités du client, qui ont leur propre formulaire). */
   edition?: string;
+  epingle?: boolean;
 };
 
 /** Extrait façon WordPress (premiers mots du chapô, « … »). */
@@ -73,6 +74,7 @@ export function actualiteVersArticle(a: Actualite): Article {
     modified: a.modifie,
     category: "Actualités",
     image: a.image,
+    ...(a.epingle ? { epingle: true } : {}),
   };
 }
 
@@ -103,8 +105,8 @@ export async function getArticles(): Promise<Article[]> {
     a.extrait = extrait(a.html);
   }
   const pris = new Set(list.map((a) => a.slug));
-  const actus = (await lireActualites()).filter((a) => !pris.has(a.slug) && !termine(a.fin)).map(actualiteVersArticle);
-  return [...list, ...actus].sort((a, b) => b.published.localeCompare(a.published));
+  const actus = (await lireActualites()).filter((a) => !pris.has(a.slug) && dansPeriode(a.debut, a.fin)).map(actualiteVersArticle);
+  return [...list, ...actus].sort((a, b) => Number(!!b.epingle) - Number(!!a.epingle) || b.published.localeCompare(a.published));
 }
 
 export async function getArticle(slug: string): Promise<Article | null> {
