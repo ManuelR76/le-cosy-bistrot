@@ -1,0 +1,35 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/retrouvez-nous/layout,_N_T_/retrouvez-nous/page,_N_T_/retrouvez-nous"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/_index",
+    "/retrouvez-nous/__PAGE__"
+  ],
+  "prefetchHints": {
+    "hints": 0,
+    "slots": {
+      "children": {
+        "hints": 64,
+        "slots": {
+          "children": {
+            "hints": 160,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/4c4c704815afbcfb15233c08a312e70dc76af341e2f501bb8c195a3538d3f6fa/$/retrouvez-nous",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/retrouvez-nous/page"
+    },
+    "isFallback": false
+  }
+}

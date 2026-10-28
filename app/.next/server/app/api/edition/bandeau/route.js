@@ -1,0 +1,10 @@
+var R=require("../../../../chunks/[turbopack]_runtime.js")("server/app/api/edition/bandeau/route.js")
+R.c("server/chunks/[root-of-the-server]__1r_ptiv8gbgrp._.js")
+R.c("server/chunks/node_modules_next_1n-fgeqx2dkas._.js")
+R.c("server/chunks/_12xvngtx-ofp5._.js")
+R.c("server/chunks/_1g_dw2anwk3-y._.js")
+R.c("server/chunks/_1vjmffma3rrgn._.js")
+R.c("server/chunks/[root-of-the-server]__1_yd2cnwehlq-._.js")
+R.c("server/chunks/_next-internal_server_app_api_edition_bandeau_route_actions_18wh6_30am887.js")
+R.m(83166)
+module.exports=R.m(83166).exports

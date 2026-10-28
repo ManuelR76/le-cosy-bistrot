@@ -1,0 +1,35 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/evenement/layout,_N_T_/evenement/page,_N_T_/evenement"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/_index",
+    "/evenement/__PAGE__"
+  ],
+  "prefetchHints": {
+    "hints": 0,
+    "slots": {
+      "children": {
+        "hints": 64,
+        "slots": {
+          "children": {
+            "hints": 160,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/b5bc47f8e47711a0b87d2d40b5dfccd2c7e59f86467546cce0a653eb41315d34/$/evenement",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/evenement/page"
+    },
+    "isFallback": false
+  }
+}

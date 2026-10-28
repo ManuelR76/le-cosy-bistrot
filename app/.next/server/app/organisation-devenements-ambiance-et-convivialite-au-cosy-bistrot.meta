@@ -1,0 +1,35 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/[slug]/layout,_N_T_/[slug]/page,_N_T_/organisation-devenements-ambiance-et-convivialite-au-cosy-bistrot,wordpress"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/_index",
+    "/$d$slug/__PAGE__"
+  ],
+  "prefetchHints": {
+    "hints": 0,
+    "slots": {
+      "children": {
+        "hints": 64,
+        "slots": {
+          "children": {
+            "hints": 160,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/8be5c7fd16ebc9b1113ef0734e81e7d65ef22d12876e276d7565437e3c68d172/$/organisation-devenements-ambiance-et-convivialite-au-cosy-bistrot",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/[slug]/page"
+    },
+    "isFallback": false
+  }
+}
