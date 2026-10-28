@@ -52,11 +52,33 @@ export async function ecrireEdits(edits: Edits): Promise<void> {
     // Historique : copie horodatée de la version précédente.
     await copy(FICHIER, `historique/contenu-${Date.now()}.json`, { access: "private", addRandomSuffix: false }).catch(() => {});
     await put(FICHIER, json, { access: "private", addRandomSuffix: false, allowOverwrite: true, contentType: "application/json" });
+    await purgerHistoriqueBlob();
     return;
   }
   await fs.mkdir(DIR, { recursive: true });
   await fs.copyFile(path.join(DIR, FICHIER), path.join(DIR, `contenu-${Date.now()}.json`)).catch(() => {});
   await fs.writeFile(path.join(DIR, FICHIER), json);
+  await purgerHistoriqueDisque();
+}
+
+/** Versions d'historique conservées (les plus récentes). */
+const VERSIONS_GARDEES = 10;
+
+async function purgerHistoriqueDisque() {
+  try {
+    const anciens = (await fs.readdir(DIR)).filter((f) => /^contenu-\d+\.json$/.test(f)).sort();
+    await Promise.all(anciens.slice(0, Math.max(0, anciens.length - VERSIONS_GARDEES)).map((f) => fs.unlink(path.join(DIR, f)).catch(() => {})));
+  } catch {}
+}
+
+async function purgerHistoriqueBlob() {
+  try {
+    const { list, del } = await import("@vercel/blob");
+    const res = await list({ prefix: "historique/", limit: 1000 });
+    const tries = res.blobs.sort((a, b) => a.pathname.localeCompare(b.pathname));
+    const trop = tries.slice(0, Math.max(0, tries.length - VERSIONS_GARDEES));
+    if (trop.length) await del(trop.map((b) => b.url));
+  } catch {}
 }
 
 /* ---------- Actualités ajoutées par le client ---------- */

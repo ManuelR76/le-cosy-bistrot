@@ -55,6 +55,15 @@ export function OngletActualites({ assistant, ouvrirDirect = false, onFormFerme 
         </button>
       </div>
       {erreur && <p className="px-4 pb-3 text-beige">{erreur}</p>}
+      {(() => {
+        const limite = new Date(Date.now() + 3 * 864e5).toISOString().slice(0, 10);
+        const bientot = (actus ?? []).filter((a) => a.fin && a.fin >= aujourdhui() && a.fin <= limite);
+        return bientot.length ? (
+          <p className="mx-4 mb-3 rounded bg-beige/15 px-3 py-2 text-sm text-beige">
+            Bientôt expirée{bientot.length > 1 ? "s" : ""} : {bientot.map((a) => `« ${a.titre} » (${jourFr(a.fin!)})`).join(", ")}. Modifiez la date pour la prolonger.
+          </p>
+        ) : null;
+      })()}
       {!actus ? (
         <p className="px-4 text-gris">Chargement…</p>
       ) : !actus.length ? (
