@@ -68,6 +68,8 @@ export type Actualite = {
   date: string; // ISO
   modifie: string; // ISO
   image: { src: string; alt: string } | null;
+  /** Dernier jour de publication (AAAA-MM-JJ, heure de Paris). Absent : pas de date de fin. */
+  fin?: string;
 };
 export const TAG_ACTUS = "actualites";
 const FICHIER_ACTUS = "actualites.json";
@@ -99,6 +101,54 @@ export async function ecrireActualites(actus: Actualite[]): Promise<void> {
   }
   await fs.mkdir(DIR, { recursive: true });
   await fs.writeFile(path.join(DIR, FICHIER_ACTUS), json);
+}
+
+/* ---------- Bandeau d'information (recrutement, fermeture…) ---------- */
+export type Bandeau = {
+  actif: boolean;
+  texte: string;
+  lien: { label: string; href: string } | null;
+  /** « haut » : bandeau en tête de toutes les pages ; « popup » : fenêtre à l'ouverture de l'accueil. */
+  affichage: "haut" | "popup";
+  /** « info » : discret (beige) ; « important » : rouge. */
+  style: "info" | "important";
+  /** Période d'affichage (AAAA-MM-JJ). Absent : pas de limite. */
+  debut?: string;
+  fin?: string;
+  /** Change à chaque enregistrement : le pop-up réapparaît même pour qui l'avait fermé. */
+  version: number;
+};
+export const TAG_BANDEAU = "bandeau";
+const FICHIER_BANDEAU = "bandeau.json";
+export const BANDEAU_VIDE: Bandeau = { actif: false, texte: "", lien: null, affichage: "haut", style: "info", version: 0 };
+
+const lireBandeauBlob = unstable_cache(
+  async (): Promise<Bandeau | null> => {
+    const f = await lireBlob(FICHIER_BANDEAU);
+    return f ? (JSON.parse(f.data.toString("utf8")) as Bandeau) : null;
+  },
+  ["contenu-bandeau"],
+  { tags: [TAG_BANDEAU], revalidate: 300 },
+);
+
+export async function lireBandeau(): Promise<Bandeau> {
+  try {
+    const b = BLOB ? await lireBandeauBlob() : (JSON.parse(await fs.readFile(path.join(DIR, FICHIER_BANDEAU), "utf8")) as Bandeau);
+    return b ? { ...BANDEAU_VIDE, ...b } : BANDEAU_VIDE;
+  } catch {
+    return BANDEAU_VIDE;
+  }
+}
+
+export async function ecrireBandeau(b: Bandeau): Promise<void> {
+  const json = JSON.stringify(b, null, 2);
+  if (BLOB) {
+    const { put } = await import("@vercel/blob");
+    await put(FICHIER_BANDEAU, json, { access: "private", addRandomSuffix: false, allowOverwrite: true, contentType: "application/json" });
+    return;
+  }
+  await fs.mkdir(DIR, { recursive: true });
+  await fs.writeFile(path.join(DIR, FICHIER_BANDEAU), json);
 }
 
 export type Version = { id: string; date: string };

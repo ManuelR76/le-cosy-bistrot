@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { markdownToHtml, parseMarkdown, stripTags } from "./markdown";
+import { termine } from "./edition/dates";
 import { lireActualites, lireEdits, type Actualite } from "./edition/store";
 import { blocsModifiables, cleDe } from "./edition/blocs";
 import { nettoyerContenu, wpPosts } from "./wordpress";
@@ -102,7 +103,7 @@ export async function getArticles(): Promise<Article[]> {
     a.extrait = extrait(a.html);
   }
   const pris = new Set(list.map((a) => a.slug));
-  const actus = (await lireActualites()).filter((a) => !pris.has(a.slug)).map(actualiteVersArticle);
+  const actus = (await lireActualites()).filter((a) => !pris.has(a.slug) && !termine(a.fin)).map(actualiteVersArticle);
   return [...list, ...actus].sort((a, b) => b.published.localeCompare(a.published));
 }
 

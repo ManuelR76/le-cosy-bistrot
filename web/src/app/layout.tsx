@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@/components/Analytics";
 import { BandeauCookies } from "@/components/BandeauCookies";
+import { BandeauInfo } from "@/components/BandeauInfo";
 import { Editeur } from "@/components/Editeur";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr-FR">
       <body className="flex min-h-dvh flex-col">
+        <BandeauInfo />
         <Header />
         <main id="contenu" className="flex-1">
           {children}

@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { mediaUrl } from "@/lib/media";
 
-type Actu = { id: string; slug: string; titre: string; texte: string; date: string; image: { src: string; alt: string } | null };
-type Brouillon = { id?: string; titre: string; texte: string; date: string; image: Actu["image"] };
+type Actu = { id: string; slug: string; titre: string; texte: string; date: string; fin?: string; image: { src: string; alt: string } | null };
+type Brouillon = { id?: string; titre: string; texte: string; date: string; fin?: string; image: Actu["image"] };
 
 export const EVT_NOUVELLE_ACTU = "cosy:nouvelle-actu";
 const aujourdhui = () => new Date().toISOString().slice(0, 10);
-const vide = (): Brouillon => ({ titre: "", texte: "", date: aujourdhui(), image: null });
+const vide = (): Brouillon => ({ titre: "", texte: "", date: aujourdhui(), fin: "", image: null });
+const jourFr = (d: string) => new Date(d + "T12:00:00").toLocaleDateString("fr-FR", { dateStyle: "long" });
 
 /** Onglet « Actualités » du panneau : liste + bouton d'ajout. */
 export function OngletActualites({ assistant, ouvrirDirect = false, onFormFerme }: { assistant: boolean; ouvrirDirect?: boolean; onFormFerme?: () => void }) {
@@ -70,12 +71,19 @@ export function OngletActualites({ assistant, ouvrirDirect = false, onFormFerme 
               )}
               <div className="min-w-0 flex-1">
                 <p className="truncate font-bold">{a.titre}</p>
-                <p className="text-xs text-gris">{new Date(a.date).toLocaleDateString("fr-FR", { dateStyle: "long" })}</p>
+                <p className="text-xs text-gris">
+                  {new Date(a.date).toLocaleDateString("fr-FR", { dateStyle: "long" })}
+                  {a.fin && (a.fin < aujourdhui() ? (
+                    <span className="ml-2 rounded bg-beige/20 px-1.5 py-0.5 text-beige">Expirée, non visible</span>
+                  ) : (
+                    <span className="ml-2">· visible jusqu&apos;au {jourFr(a.fin)}</span>
+                  ))}
+                </p>
                 <div className="mt-1 flex flex-wrap gap-x-4 text-sm">
                   <a href={`/${a.slug}/`} className="underline">
                     Voir
                   </a>
-                  <button type="button" className="underline" onClick={() => setForm({ ...a, date: a.date.slice(0, 10) })}>
+                  <button type="button" className="underline" onClick={() => setForm({ ...a, date: a.date.slice(0, 10), fin: a.fin || "" })}>
                     Modifier
                   </button>
                   {aSupprimer === a.id ? (
@@ -164,7 +172,7 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
     const r = await fetch("/api/edition/actualites/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...b, image: b.image ? { ...b.image, alt: b.image.alt || b.titre } : null }),
+      body: JSON.stringify({ ...b, fin: b.fin || "", image: b.image ? { ...b.image, alt: b.image.alt || b.titre } : null }),
     });
     const j = await r.json();
     setOccupe(null);
@@ -246,6 +254,18 @@ function FormulaireActu({ initial, assistant, onFermer, onPublie }: { initial: B
             <span className="font-bold">4. Date de l&apos;actualité</span>
             <input type="date" value={b.date.slice(0, 10)} onChange={(e) => maj({ date: e.target.value })} className="border border-gris/40 bg-[#1b1b1b] px-3 py-2 [color-scheme:dark]" />
           </label>
+
+          <fieldset className="flex flex-col gap-2">
+            <legend className="font-bold">5. Fin de publication</legend>
+            <label className="flex items-center gap-2">
+              <input type="radio" name="fin" checked={!b.fin} onChange={() => maj({ fin: "" })} /> Sans date (reste en ligne)
+            </label>
+            <label className="flex flex-wrap items-center gap-2">
+              <input type="radio" name="fin" checked={!!b.fin} onChange={() => maj({ fin: b.fin || b.date.slice(0, 10) })} /> Jusqu&apos;au
+              <input type="date" value={b.fin || ""} min={b.date.slice(0, 10)} onChange={(e) => maj({ fin: e.target.value })} className="border border-gris/40 bg-[#1b1b1b] px-3 py-2 [color-scheme:dark]" />
+            </label>
+            <span className="text-xs text-gris">Après cette date, l&apos;actualité disparaît du site. Vous pouvez la remettre en changeant la date.</span>
+          </fieldset>
         </div>
 
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-beige/30 px-5 py-4">

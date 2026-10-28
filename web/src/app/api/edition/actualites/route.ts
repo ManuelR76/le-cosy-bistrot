@@ -2,6 +2,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { getArticles } from "@/lib/content";
 import { sessionValide } from "@/lib/edition/auth";
+import { JOUR } from "@/lib/edition/dates";
 import { ecrireActualites, lireActualites, stockageDisponible, TAG_ACTUS, type Actualite } from "@/lib/edition/store";
 
 export const dynamic = "force-dynamic";
@@ -44,6 +45,9 @@ export async function POST(req: Request) {
   if (titre.length < 3 || titre.length > 140) return NextResponse.json({ erreur: "Le titre doit faire entre 3 et 140 caractères." }, { status: 400 });
   if (texte.length < 3 || texte.length > 20000) return NextResponse.json({ erreur: "Le texte est trop court (3 caractères minimum)." }, { status: 400 });
   const date = b?.date && !Number.isNaN(Date.parse(b.date)) ? new Date(b.date).toISOString() : new Date().toISOString();
+  // Date de fin facultative : absente ou vide = « sans date ».
+  const fin = typeof b?.fin === "string" && b.fin ? b.fin : undefined;
+  if (fin && (!JOUR.test(fin) || Number.isNaN(Date.parse(fin)))) return NextResponse.json({ erreur: "Date de fin invalide." }, { status: 400 });
   const image =
     b?.image && typeof b.image.src === "string" && /^\/medias\/[\w.-]+$|^\/wp-content\/uploads\//.test(b.image.src)
       ? { src: b.image.src, alt: String(b.image.alt ?? titre).slice(0, 200) }
@@ -54,13 +58,13 @@ export async function POST(req: Request) {
   let actu = b?.id ? actus.find((a) => a.id === b.id) : undefined;
   const anciens = actu ? [actu.slug] : [];
   if (actu) {
-    Object.assign(actu, { titre, texte, date, image, modifie: maintenant });
+    Object.assign(actu, { titre, texte, date, image, fin, modifie: maintenant });
   } else {
     // Adresse de l'article : tirée du titre, unique, sans collision avec une page du site.
     const pris = new Set([...(await getArticles()).map((a) => a.slug), ...actus.map((a) => a.slug), ...RESERVES]);
     let slug = slugifier(titre) || "actualite";
     for (let i = 2; pris.has(slug); i++) slug = `${slugifier(titre)}-${i}`;
-    actu = { id: crypto.randomUUID(), slug, titre, texte, date, modifie: maintenant, image };
+    actu = { id: crypto.randomUUID(), slug, titre, texte, date, modifie: maintenant, image, ...(fin ? { fin } : {}) };
     actus.push(actu);
   }
   await ecrireActualites(actus);

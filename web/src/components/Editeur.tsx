@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { mediaUrl } from "@/lib/media";
 import { EVT_NOUVELLE_ACTU, OngletActualites } from "./EditeurActualites";
+import { OngletBandeau } from "./EditeurBandeau";
 
 /*
  * Mode édition « sur la page » + panneau d'aide en bas à droite.
@@ -14,7 +15,7 @@ type Groupe = { chemin: string; srcs: string[]; el: HTMLElement; unique: boolean
 type Mod = { avant: string; apres: string; libelle: string };
 type Bulle = { role: "user" | "assistant"; content: string; nb?: number };
 type Version = { id: string; date: string };
-type Onglet = "assistant" | "modifs" | "actus" | "google" | "historique" | "aide";
+type Onglet = "assistant" | "modifs" | "actus" | "bandeau" | "google" | "historique" | "aide";
 
 const lireCookie = (nom: string) => document.cookie.split("; ").some((c) => c === `${nom}=1`);
 const champs = (chemin: string) => Array.from(document.querySelectorAll<HTMLElement>(`[data-edit="${CSS.escape(chemin)}"]`));
@@ -336,6 +337,7 @@ export function Editeur() {
                 ["assistant", "Assistant"],
                 ["modifs", `Modifs${n ? ` (${n})` : ""}`],
                 ["actus", "Actus"],
+                ["bandeau", "Bandeau"],
                 ["google", "Google"],
                 ["historique", "Historique"],
                 ["aide", "Aide"],
@@ -364,6 +366,7 @@ export function Editeur() {
                 </p>
               ))}
             {onglet === "actus" && <OngletActualites key={demandeActu} assistant={assistantActif} ouvrirDirect={demandeActu > 0} onFormFerme={() => setDemandeActu(0)} />}
+            {onglet === "bandeau" && <OngletBandeau />}
             {onglet === "modifs" && <Modifs mods={mods} onAnnuler={annuler} />}
             {onglet === "google" && <Google seo={seo} mods={mods} onChanger={noter} />}
             {onglet === "historique" && <Historique />}
@@ -653,7 +656,11 @@ function Aide() {
       </p>
       <p>
         <strong>Ajouter une actualité</strong> : onglet « Actus », puis « + Ajouter une actualité ». Titre, photo, texte : elle
-        apparaît aussitôt sur l&apos;accueil et dans « Toutes nos actualités ».
+        apparaît aussitôt sur l&apos;accueil et dans « Toutes nos actualités ». Vous pouvez fixer une date de fin de publication (ou « Sans date »).
+      </p>
+      <p>
+        <strong>Bandeau d&apos;information</strong> : onglet « Bandeau ». Un message (recrutement, fermeture…) en haut du site ou en pop-up
+        à l&apos;ouverture de l&apos;accueil, avec dates de début et de fin facultatives.
       </p>
       <p>
         <strong>Autres pages</strong> : naviguez avec le menu ; enregistrez avant de changer de page.
